@@ -34,8 +34,8 @@
   - `description`: Untrusted description of the proposed action (5 to 600 chars).
 - **Returns**: `decision_id` (e.g., `"1"`).
 - **Latency**:
-  - `HARD_LIMIT` / `VELOCITY` trips: ~1-3s.
-  - Validator LLM consensus (`JUDGE`): ~15-25s.
+  - `HARD_LIMIT` / `VELOCITY` trips: 5.26s - 5.30s (measured on Studionet).
+  - Validator LLM consensus (`JUDGE`): 11.93s to 32.03s (measured average: 19.02s).
 
 #### 4. `resolve_escalation(decision_id: str, outcome: str) -> None`
 - **Caller**: Must be the policy `owner`.

@@ -57,11 +57,11 @@ Autonomous AI agents equipped with discretionary capabilities, API tokens, or on
 
 ### 1. Two-Tier Evaluation Architecture
 1. **Deterministic Guard (Pre-LLM)**:
-   - `HARD_LIMIT`: If `amount > max_amount`, rejects immediately with `source: HARD_LIMIT` and `status: DENIED` (~5s).
-   - `VELOCITY`: Computes rolling sum of cleared actions over the last 10 decisions in the category. If `sum + amount > window_cap`, routes directly to `source: VELOCITY` and `status: PENDING_OWNER` (~5s).
+    - `HARD_LIMIT`: If `amount > max_amount`, rejects immediately with `source: HARD_LIMIT` and `status: DENIED` (5.26s measured).
+    - `VELOCITY`: Computes rolling sum of cleared actions over the last 10 decisions in the category. If `sum + amount > window_cap`, routes directly to `source: VELOCITY` and `status: PENDING_OWNER` (5.30s measured).
 2. **Multi-Validator Consensus (`JUDGE`)**:
    - Actions within numeric limits are dispatched to independent validators executing diverse model families.
-   - Validators reach consensus exclusively on a single canonical enum: `ALLOW`, `DENY`, or `ESCALATE` (~15-25s).
+   - Validators reach consensus exclusively on a single canonical enum: `ALLOW`, `DENY`, or `ESCALATE` (measured range: 11.93s to 32.03s, mean: 19.02s).
    - Any ambiguous purchase or malformed response fails closed to `ESCALATE`.
 
 ---
@@ -75,9 +75,9 @@ Autonomous AI agents equipped with discretionary capabilities, API tokens, or on
 
 ---
 
-## Verified Live Evidence (Studionet)
+## On-Chain Verified Evidence (Studionet)
 
-Real transactions executed and verified on GenLayer Studionet (see [`docs/VERIFICATION.md`](docs/VERIFICATION.md)):
+Transactions executed and verified on GenLayer Studionet (see [`docs/VERIFICATION.md`](docs/VERIFICATION.md) and [`docs/RECEIPTS.md`](docs/RECEIPTS.md)):
 
 | Run | Scenario | Transaction Hash | Verdict | Source | Latency | `is_cleared` |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
@@ -96,6 +96,7 @@ Real transactions executed and verified on GenLayer Studionet (see [`docs/VERIFI
 
 ```bash
 # Run all layered tests (Pure logic, mocked simulator, consensus simulation, boundary checks)
+# Note: Layer 2 and Layer 3 tests execute against an off-chain Python simulator and do not execute under GenVM.
 python -m unittest discover tests
 
 # Run security scanners
@@ -112,16 +113,16 @@ python scripts/scan_ascii.py
 # Install SDK dependencies
 npm install
 
-# Deploy probe contract
+# Deploy probe contract (Milestone 0)
 node scripts/deploy/deploy_probe.js
 
-# Deploy and run live core validation
+# Deploy core contract verification (Milestone 1)
 node scripts/deploy/deploy_core.js
 
-# Deploy full contract and run live evidence runs
-node scripts/deploy/run_live_evidence.js
+# Deploy full contract and run evidence rounds (Milestone 4)
+# (see scripts/deploy/run_live_evidence.js)
 
-# Deploy consumer contract (cross-contract view validation)
+# Deploy consumer contract for cross-contract validation (Milestone 5)
 node scripts/deploy/deploy_consumer.js
 ```
 

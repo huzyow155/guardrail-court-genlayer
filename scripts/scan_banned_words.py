@@ -41,8 +41,8 @@ def scan():
             with open(path, 'r', encoding='utf-8', errors='ignore') as fp:
                 for line_idx, line in enumerate(fp, 1):
                     for pat, name in BANNED_PATTERNS:
-                        # Allowed check for literal status code check: e.g. status_name === 'FINALIZED'
-                        if name == 'finalized' and ("=== 'FINALIZED'" in line or '=== "FINALIZED"' in line or "=== `FINALIZED`" in line or '"FINALIZED"' in line):
+                        # Allowed check for literal status code check: e.g. status_name === 'FINALIZED' or quoted `FINALIZED`
+                        if name == 'finalized' and ("=== 'FINALIZED'" in line or '=== "FINALIZED"' in line or "=== `FINALIZED`" in line or '"FINALIZED"' in line or '`FINALIZED`' in line):
                             continue
                         
                         m = re.search(pat, line, re.IGNORECASE)

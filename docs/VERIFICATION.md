@@ -14,7 +14,7 @@
 - **Local Contract File**: `contracts/GuardrailCourt.py`
 - **Local Source SHA-256**: `dd3c61182f299699a55a3ffefb64fb472dba0b37c7b68def92235a577e179bbc`
 - **Deployment Registry SHA-256**: `dd3c61182f299699a55a3ffefb64fb472dba0b37c7b68def92235a577e179bbc`
-- **Verification Method**: Byte-for-byte SHA-256 hash match between local source and deployment manifest payload verified by `scripts/verify_source.js`.
+- **Verification Method**: Byte-for-byte SHA-256 hash match against the base64-decoded `data.contract_code` payload retrieved directly via RPC (`getTransaction`) and verified with zero diff (`git diff --no-index scripts/extracted_from_chain.py contracts/GuardrailCourt.py`).
 
 ---
 
@@ -44,14 +44,20 @@
 
 ---
 
-## Leader and Consensus Latency Analysis
+## Latency Measurement Methodology and Statistical Summary
 
-- **Deterministic Pre-Guard Latency**:
-  - `HARD_LIMIT` DENY: **5.26s**
-  - `VELOCITY` ESCALATE: **5.30s**
-  - Owner resolution / pause: **4.88s - 8.47s**
-  - *Finding*: Deterministic pre-checks bypass the LLM validator inference loop completely, reducing response latency by ~70% compared to full consensus rounds.
-- **LLM Consensus Latency**:
-  - Range: **11.93s to 32.03s**
-  - Average LLM Round: **~18.9s**
-  - Multi-validator LLM consensus required an average of ~18.9 seconds for prompt dispatch, inference across independent models, and majority equivalence validation.
+- **Timing Methodology**: Latency measured via `Date.now()` timestamp deltas immediately before calling `writeContract` until `waitForTransactionReceipt` returns the accepted transaction receipt from the Studionet RPC node.
+- **Source Data File**: `scripts/deploy/live_evidence.json`
+
+### Latency by Execution Type
+1. **Deterministic Guard Short-Circuits**:
+   - `HARD_LIMIT` DENY (n=1): **5.26s**
+   - `VELOCITY` ESCALATE (n=1): **5.30s**
+   - Owner State Writes (`resolve_escalation`, `set_paused`) (n=2): **4.88s - 8.47s** (Mean: 6.68s)
+   - *Analysis*: Deterministic state checks eliminate the LLM inference loop entirely, completing ~70% faster than consensus rounds.
+2. **Multi-Validator LLM Consensus Rounds (`source: JUDGE`)**:
+   - Number of observations (n): **8**
+   - Observations: `11.93s, 15.45s, 18.57s, 25.28s, 32.03s, 18.47s, 15.17s, 15.28s`
+   - Minimum: **11.93s** (Run a)
+   - Maximum: **32.03s** (Run e-2)
+   - Calculated Arithmetic Mean: **19.02s** (Sum: 152.18s / 8)

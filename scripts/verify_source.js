@@ -18,21 +18,31 @@ async function main() {
     account: createAccount(),
   });
 
-  console.log("Fetching deploy transaction receipt for:", deployTxHash);
-  const receipt = await client.waitForTransactionReceipt({ hash: deployTxHash });
+  console.log("Fetching deploy transaction via RPC for:", deployTxHash);
+  const tx = await client.getTransaction({ hash: deployTxHash });
   
-  console.log("Receipt status:", receipt.status_name);
-  console.log("Recipient contract address:", receipt.recipient);
-  console.log("Local code SHA-256:", localSha256);
-  console.log("Registered deployments.json SHA-256:", deployments.sourceSha256);
-
-  const matched = (deployments.sourceSha256 === localSha256);
-  console.log("SHA-256 match verified:", matched);
-
-  // Dump calldata envelope info
-  if (receipt.data && receipt.data.calldata) {
-    console.log("Receipt calldata readable:", receipt.data.calldata.readable);
+  if (!tx || !tx.data || !tx.data.contract_code) {
+    throw new Error("Deploy transaction does not contain contract_code in data field");
   }
+
+  const rawBase64 = tx.data.contract_code;
+  const chainBuffer = Buffer.from(rawBase64, 'base64');
+  const chainSha256 = crypto.createHash('sha256').update(chainBuffer).digest('hex');
+
+  console.log("Chain contract_code field format: base64 (length " + rawBase64.length + " chars)");
+  console.log("Chain contract_code decoded byte length:", chainBuffer.length);
+  console.log("First 16 bytes (hex):", chainBuffer.slice(0, 16).toString('hex'));
+  console.log("Last 16 bytes (hex):", chainBuffer.slice(-16).toString('hex'));
+  console.log("Chain decoded SHA-256:", chainSha256);
+  console.log("Local code SHA-256:   ", localSha256);
+
+  const matched = (chainSha256 === localSha256);
+  console.log("Byte-for-byte SHA-256 match verified against on-chain code:", matched);
+
+  // Write extracted file to disk for git diff comparison
+  const extractedPath = path.join(__dirname, 'extracted_from_chain.py');
+  fs.writeFileSync(extractedPath, chainBuffer);
+  console.log("Saved extracted on-chain code to:", extractedPath);
 }
 
 main().catch(err => {

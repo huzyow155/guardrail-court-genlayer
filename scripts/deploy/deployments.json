@@ -3,9 +3,33 @@
   "chainId": 61999,
   "rpc": "https://studio.genlayer.com/api",
   "explorerBase": "https://explorer-studio.genlayer.com/address/",
+  "official": {
+    "contractName": "GuardrailCourt",
+    "status": "official",
+    "contractAddress": "0x6C553Ba27a768D71b570a106D9D2e13553b4103c",
+    "deployTxHash": "0xe7a7ec9e6e1b1cf9f07696d251dc08118b7c865121551107850abb2938d81136",
+    "sourceSha256": "dd3c61182f299699a55a3ffefb64fb472dba0b37c7b68def92235a577e179bbc",
+    "ownerAddress": "0x1BDbF9D058492d2bB0553bf3d9aC5730B5e5d3be",
+    "agentAddress": "0x1b1E4A79E286434c428a576E6d91BC2220661cf3"
+  },
+  "superseded": [
+    {
+      "contractName": "Probe",
+      "status": "superseded",
+      "milestone": "Milestone 0 Runtime Probe",
+      "contractAddress": "0xCafd1A568d5A55eb7E1135F0Fe31137114D5Fe42",
+      "deployTxHash": "0xef76f606fb197b9366042827e4c509fb44d126d71c86d7690fa8ebc2b5061368"
+    },
+    {
+      "contractName": "GuardrailCourtCore",
+      "status": "superseded",
+      "milestone": "Milestone 1 Core Probe",
+      "contractAddress": "0xAA4eaa01fEd9668d23ec067fa179E94b82ab31AD",
+      "deployTxHash": "0x398f6c55e1daf336e8f85ab75b1487ae518ed04eb0a5bcfbfba2d8bc61b5035b"
+    }
+  ],
   "contractAddress": "0x6C553Ba27a768D71b570a106D9D2e13553b4103c",
   "deployTxHash": "0xe7a7ec9e6e1b1cf9f07696d251dc08118b7c865121551107850abb2938d81136",
-  "commitHash": "6549a4d02bbb2dd642c062c6819152135caa526f",
   "sourceSha256": "dd3c61182f299699a55a3ffefb64fb472dba0b37c7b68def92235a577e179bbc",
   "ownerAddress": "0x1BDbF9D058492d2bB0553bf3d9aC5730B5e5d3be",
   "agentAddress": "0x1b1E4A79E286434c428a576E6d91BC2220661cf3"
