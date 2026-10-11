@@ -10,7 +10,7 @@
 - **Deploy Transaction Hash**: `0xe7a7ec9e6e1b1cf9f07696d251dc08118b7c865121551107850abb2938d81136`
 - **Deploy Transaction Receipt Status**: `ACCEPTED` (Result: `MAJORITY_AGREE`)
 - **Leader Execution Result**: `SUCCESS`
-- **Git Commit Hash**: `455a6dbb5c27359b5e9c5e1fffccc1e07b9cf186`
+- **Git Commit Hash**: `6549a4d02bbb2dd642c062c6819152135caa526f`
 - **Local Contract File**: `contracts/GuardrailCourt.py`
 - **Local Source SHA-256**: `dd3c61182f299699a55a3ffefb64fb472dba0b37c7b68def92235a577e179bbc`
 - **Deployment Registry SHA-256**: `dd3c61182f299699a55a3ffefb64fb472dba0b37c7b68def92235a577e179bbc`
