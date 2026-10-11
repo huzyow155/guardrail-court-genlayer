@@ -1,0 +1,22 @@
+{
+  "name": "guardrail-court-genlayer",
+  "version": "1.0.0",
+  "description": "Guardrail Court Intelligent Contract on GenLayer Studionet: policy gate for autonomous AI agents",
+  "main": "index.js",
+  "scripts": {
+    "test": "python -m unittest discover tests"
+  },
+  "keywords": [
+    "genlayer",
+    "intelligent-contracts",
+    "ai-agents",
+    "guardrails",
+    "policy-gate"
+  ],
+  "author": "huzyow155",
+  "license": "MIT",
+  "type": "commonjs",
+  "dependencies": {
+    "genlayer-js": "^1.1.8"
+  }
+}
