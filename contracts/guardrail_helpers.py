@@ -1,85 +1,83 @@
-# Pure helper functions for Guardrail Court (module-level for direct testing)
+# Pure helper functions for Guardrail Court
+# Byte-for-byte logic parity with contracts/GuardrailCourt.py lines 12-103
 import json
-import re
 
-ADDRESS_REGEX = re.compile(r"^0x[0-9a-fA-F]{40}$")
-CATEGORY_REGEX = re.compile(r"^[a-z0-9_-]{1,30}$")
-AMOUNT_REGEX = re.compile(r"^[0-9]{1,18}$")
 
 def is_valid_address(addr: str) -> bool:
-    if not isinstance(addr, str):
+    if not isinstance(addr, str) or len(addr) != 42 or not addr.startswith("0x"):
         return False
-    return bool(ADDRESS_REGEX.match(addr.strip()))
+    hex_part = addr[2:]
+    for c in hex_part:
+        if c not in "0123456789abcdefABCDEF":
+            return False
+    return True
+
 
 def is_valid_amount_str(val: str) -> bool:
-    if not isinstance(val, str):
+    if not isinstance(val, str) or len(val) == 0 or len(val) > 18:
         return False
-    val = val.strip()
-    if not AMOUNT_REGEX.match(val):
-        return False
-    # No leading zeros except '0' itself
+    for c in val:
+        if c not in "0123456789":
+            return False
     if len(val) > 1 and val.startswith("0"):
         return False
     return True
 
+
 def is_valid_category(cat: str) -> bool:
-    if not isinstance(cat, str):
+    if not isinstance(cat, str) or len(cat) == 0 or len(cat) > 30:
         return False
-    return bool(CATEGORY_REGEX.match(cat.strip()))
+    allowed = "abcdefghijklmnopqrstuvwxyz0123456789_-"
+    for c in cat:
+        if c not in allowed:
+            return False
+    return True
+
 
 def parse_model_verdict(raw_output: str) -> str:
     """
-    Defensive parser for model verdict output.
-    Returns exactly 'ALLOW', 'DENY', or 'ESCALATE'.
-    Fail-closed: Any malformed text, missing key, extra words, or non-matching value returns 'ESCALATE'.
+    Defensively extracts ALLOW, DENY, or ESCALATE.
+    Defaults to ESCALATE on any deviation, noise, or invalid JSON.
     """
     if not raw_output or not isinstance(raw_output, str):
         return "ESCALATE"
 
     cleaned = raw_output.strip()
-    # Strip markdown code blocks
     if cleaned.startswith("```"):
         lines = cleaned.split("\n")
-        # Remove opening fence
         if lines and lines[0].startswith("```"):
             lines = lines[1:]
-        # Remove closing fence
         if lines and lines[-1].strip() == "```":
             lines = lines[:-1]
         cleaned = "\n".join(lines).strip()
 
-    # Try JSON parsing
-    candidate_val = ""
+    candidate = ""
     try:
         data = json.loads(cleaned)
         if isinstance(data, dict) and "verdict" in data:
             v = data["verdict"]
             if isinstance(v, str):
-                candidate_val = v.strip().upper()
+                candidate = v.strip().upper()
     except Exception:
-        # If strict JSON parse failed, attempt defensive regex search for {"verdict": "..."}
-        m = re.search(r'["\']verdict["\']\s*:\s*["\']\s*([A-Za-z]+)\s*["\']', cleaned)
-        if m:
-            candidate_val = m.group(1).strip().upper()
+        upper_text = cleaned.upper()
+        if '"VERDICT": "ALLOW"' in upper_text or "'VERDICT': 'ALLOW'" in upper_text:
+            candidate = "ALLOW"
+        elif '"VERDICT": "DENY"' in upper_text or "'VERDICT': 'DENY'" in upper_text:
+            candidate = "DENY"
+        elif '"VERDICT": "ESCALATE"' in upper_text or "'VERDICT': 'ESCALATE'" in upper_text:
+            candidate = "ESCALATE"
 
-    if candidate_val in ("ALLOW", "DENY", "ESCALATE"):
-        return candidate_val
+    if candidate in ("ALLOW", "DENY", "ESCALATE"):
+        return candidate
 
     return "ESCALATE"
 
-def velocity_guard(history_decisions: list[dict], category: str, amount: int, window_cap: int, window: int = 10) -> str:
-    """
-    Deterministic velocity rate limiter:
-    Take the last `window` decisions of this policy in the SAME category;
-    sum the amounts of those that are cleared (verdict ALLOW, or resolved_by_owner == True and verdict ALLOW);
-    if window_cap > 0 and sum + amount > window_cap -> ESCALATE.
-    Otherwise -> PASS.
-    """
+
+def velocity_guard(history_decisions: list, category: str, amount: int, window_cap: int, window: int = 10) -> str:
     if window_cap <= 0:
         return "PASS"
 
     matching = []
-    # history_decisions is assumed newest first or ordered; we inspect the most recent decisions in this category
     for d in history_decisions:
         if d.get("category") == category:
             matching.append(d)
@@ -88,7 +86,6 @@ def velocity_guard(history_decisions: list[dict], category: str, amount: int, wi
 
     cleared_sum = 0
     for d in matching:
-        # Status CLEARED or verdict ALLOW or owner resolved ALLOW
         status = d.get("status", "")
         verdict = d.get("verdict", "")
         if status == "CLEARED" or verdict == "ALLOW":
@@ -98,3 +95,11 @@ def velocity_guard(history_decisions: list[dict], category: str, amount: int, wi
         return "ESCALATE"
 
     return "PASS"
+
+
+# Aliases matching contract's internal names
+_is_valid_address = is_valid_address
+_is_valid_amount_str = is_valid_amount_str
+_is_valid_category = is_valid_category
+_parse_model_verdict = parse_model_verdict
+_velocity_guard = velocity_guard

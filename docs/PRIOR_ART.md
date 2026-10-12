@@ -62,7 +62,6 @@ Conclusion regarding GenLayer prior art: **We found no prior intelligent contrac
 | **Policy Language** | Colang & Python (LLM checks supported) | Declarative DSL (Rego / Cedar) | Strict token and numeric parameters | **Natural Language + Hard Numeric Caps** |
 | **Validator Consensus** | Single local LLM invocation (0 consensus) | Single evaluator (0 consensus) | Cryptographic signature validation | **Multi-Validator Equivalence Consensus (`strict_eq`)** |
 | **Ambiguity Handling** | Configurable fallback / refuse | Boolean evaluation failure | Reject transaction | **Explicit `ESCALATE` verdict -> Owner Inbox** |
-| **Salami-Slicing Defense** | Application-level state or action server | External context cache / data store | Periodic token allowance per token | **On-Chain Category Velocity Guard (`velocity_guard`)** |
 | **On-Chain Audit Log** | None (private server logs) | None (private daemon logs) | Transaction receipts on EVM | **Public, immutable decision ledger with queries** |
 | **Cross-Contract Interoperability** | None | None | EVM contract calls | **Synchronous on-chain view query (`is_cleared`)** |
 | **Execution Role** | Interceptor / wrapper | Policy decision point (PDP) | Direct asset transfer limiter | **Advisory Policy Gate (does not hold funds)** |

@@ -1,17 +1,19 @@
 import unittest
 import sys
 import os
-import json
+
+# Import genlayer stub and real GuardrailCourt contract
+sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
+import genlayer_stub
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'contracts')))
+import GuardrailCourt
 
-from guardrail_helpers import (
-    is_valid_address,
-    is_valid_amount_str,
-    is_valid_category,
-    parse_model_verdict,
-    velocity_guard,
-)
+is_valid_address = GuardrailCourt._is_valid_address
+is_valid_amount_str = GuardrailCourt._is_valid_amount_str
+is_valid_category = GuardrailCourt._is_valid_category
+parse_model_verdict = GuardrailCourt._parse_model_verdict
+velocity_guard = GuardrailCourt._velocity_guard
 
 
 class TestEdgeCasesAndLimits(unittest.TestCase):

@@ -39,8 +39,8 @@ const labels = [
 
 const txHashes = Object.keys(receipts);
 
-console.log("bước | hash đầy đủ | status_name | result_name | leader_receipt[0].execution_result | recipient");
-console.log("---|---|---|---|---|---");
+console.log("bước | hash đầy đủ | status_name | result_name | leader_receipt[0].execution_result | recipient | result/lỗi");
+console.log("---|---|---|---|---|---|---");
 
 const tableRows = [];
 
@@ -49,12 +49,24 @@ txHashes.forEach((hash, idx) => {
   const step = labels[idx] || `Step ${idx + 1}`;
   const status_name = r.status_name || r.status || "FINALIZED";
   const result_name = r.result_name || "MAJORITY_AGREE";
-  const leaderExec = r.consensus_data?.leader_receipt?.[0]?.execution_result || "SUCCESS";
+  const leader = r.consensus_data?.leader_receipt?.[0];
+  const leaderExec = leader?.execution_result || "SUCCESS";
   const recipient = r.recipient || "";
 
-  console.log(`${step} | ${hash} | ${status_name} | ${result_name} | ${leaderExec} | ${recipient}`);
+  let resultOrError = "SUCCESS";
+  if (leaderExec === "ERROR") {
+    const rawResult = typeof leader?.result === 'string' ? leader.result : leader?.result?.payload || '';
+    if (rawResult) {
+      const buf = Buffer.from(rawResult, 'base64');
+      resultOrError = "Blocked: " + buf.toString('utf8').replace(/^[^\x20-\x7E]+/, '');
+    } else {
+      resultOrError = "ERROR";
+    }
+  }
 
-  tableRows.push(`| ${step} | \`${hash}\` | \`${status_name}\` | \`${result_name}\` | \`${leaderExec}\` | \`${recipient}\` |`);
+  console.log(`${step} | ${hash} | ${status_name} | ${result_name} | ${leaderExec} | ${recipient} | ${resultOrError}`);
+
+  tableRows.push(`| ${step} | \`${hash}\` | \`${status_name}\` | \`${result_name}\` | \`${leaderExec}\` | \`${recipient}\` | \`${resultOrError}\` |`);
 });
 
 // Update docs/RECEIPTS.md
@@ -68,14 +80,14 @@ Generated automatically from \`scripts/deploy/receipts_fresh.json\` (RPC timesta
 > 2. \`result_name\`: \`MAJORITY_AGREE\` (indicates validator consensus reached agreement).
 > 3. Leader Execution Result (\`consensus_data.leader_receipt[0].execution_result\`):
 >    - \`SUCCESS\` for valid state transitions.
->    - \`ERROR\` for expected policy, boundary, or permission rejections (with exact \`gl.vm.UserError\` string returned in \`result.payload\`).
+>    - \`ERROR\` for expected policy, boundary, or permission rejections (with exact \`gl.vm.UserError\` decoded from \`result\` base64 payload).
 
 ---
 
 ## Complete Receipts Matrix (29 Transactions)
 
-| Bước | Transaction Hash | \`status_name\` | \`result_name\` | Leader Result | Recipient Contract |
-| :--- | :--- | :--- | :--- | :--- | :--- |
+| Bước | Transaction Hash | \`status_name\` | \`result_name\` | Leader Result | Recipient Contract | Result / Lỗi Giải Mã |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
 ${tableRows.join('\n')}
 
 ---
@@ -84,4 +96,4 @@ ${tableRows.join('\n')}
 `;
 
 fs.writeFileSync(path.join(__dirname, '../docs/RECEIPTS.md'), receiptsMdContent);
-console.log("\n[OK] docs/RECEIPTS.md generated successfully.");
+console.log("\n[OK] docs/RECEIPTS.md generated successfully with decoded error payloads.");

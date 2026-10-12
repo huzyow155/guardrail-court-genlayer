@@ -2,9 +2,14 @@ import unittest
 import sys
 import os
 
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'contracts')))
+# Import genlayer stub and real GuardrailCourt contract
+sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
+import genlayer_stub
 
-from guardrail_helpers import parse_model_verdict
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'contracts')))
+import GuardrailCourt
+
+parse_model_verdict = GuardrailCourt._parse_model_verdict
 
 
 class TestInjectionResistance(unittest.TestCase):
