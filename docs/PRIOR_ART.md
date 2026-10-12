@@ -54,17 +54,42 @@ Conclusion regarding GenLayer prior art: **We found no prior intelligent contrac
 
 ---
 
-## Comparison Matrix
+## External Systems Overview
 
-| Dimension | NVIDIA NeMo Guardrails | Open Policy Agent (OPA) / Cedar | Safe Spending Limits | Guardrail Court (This Project) |
-| :--- | :--- | :--- | :--- | :--- |
-| **Execution Environment** | Local Python runtime / sidecar proxy | Server daemon / embedded engine | EVM Smart Contract (Safe module) | **GenLayer Studionet Intelligent Contract** |
-| **Policy Language** | Colang & Python (LLM checks supported) | Declarative DSL (Rego / Cedar) | Strict token and numeric parameters | **Natural Language + Hard Numeric Caps** |
-| **Validator Consensus** | Single local LLM invocation (0 consensus) | Single evaluator (0 consensus) | Cryptographic signature validation | **Multi-Validator Equivalence Consensus (`strict_eq`)** |
-| **Ambiguity Handling** | Configurable fallback / refuse | Boolean evaluation failure | Reject transaction | **Explicit `ESCALATE` verdict -> Owner Inbox** |
-| **On-Chain Audit Log** | None (private server logs) | None (private daemon logs) | Transaction receipts on EVM | **Public, immutable decision ledger with queries** |
-| **Cross-Contract Interoperability** | None | None | EVM contract calls | **Synchronous on-chain view query (`is_cleared`)** |
-| **Execution Role** | Interceptor / wrapper | Policy decision point (PDP) | Direct asset transfer limiter | **Advisory Policy Gate (does not hold funds)** |
+### NVIDIA NeMo Guardrails
+- **Source**: [https://github.com/NVIDIA-NeMo/Guardrails](https://github.com/NVIDIA-NeMo/Guardrails)
+- **Verified Quote**: *"NeMo Guardrails is an open-source toolkit for easily adding programmable guardrails to LLM-based conversational systems."*
+- **Role**: Middleware and runtime library for conversational AI guardrails.
+
+### Open Policy Agent (OPA) & AWS Cedar
+- **OPA Source**: [https://github.com/open-policy-agent/opa](https://github.com/open-policy-agent/opa)
+- **OPA Documentation**: [https://www.openpolicyagent.org/docs/latest/](https://www.openpolicyagent.org/docs/latest/)
+- **Cedar Documentation**: [https://docs.cedarpolicy.com/](https://docs.cedarpolicy.com/)
+- **Verified Quotes**:
+  - OPA: *"Open Policy Agent (OPA) is an open source, general-purpose policy engine that enables unified, context-aware policy enforcement across the entire stack."*
+  - OPA: *"OPA decouples policy decision-making from policy enforcement."*
+  - Cedar: *"Cedar is a language for writing authorization policies and making authorization decisions based on those policies."*
+- **Role**: Declarative policy engines evaluating structured data against predefined authorization rules.
+
+### Safe Smart Account & Safe Allowance Modules
+- **Safe Modules Source**: [https://github.com/safe-fndn/safe-modules](https://github.com/safe-fndn/safe-modules)
+- **Zodiac Protocol Source**: [https://github.com/gnosisguild/zodiac](https://github.com/gnosisguild/zodiac)
+- **Verified Quotes**:
+  - Safe Modules: *"A collection of modules that can be used with the Safe contract"*
+  - Zodiac Protocol: *"Zodiac is a collection of tools built according to an open standard."*
+- **Role**: Smart contract modules enforcing on-chain spending allowances and token transfer limits.
+
+---
+
+## What Guardrail Court Does
+
+Guardrail Court operates independently as an intelligent contract on GenLayer Studionet with the following mechanics:
+- **Natural-Language Policy Evaluation**: Evaluates proposed actions against natural-language policy text defined by human owners.
+- **Multi-Validator Equivalence Consensus**: Runs validator consensus on an explicit 3-way verdict enum (`ALLOW`, `DENY`, or `ESCALATE`) via `gl.eq_principle.strict_eq`.
+- **Pre-LLM Numeric Guards**: Executes zero-inference numeric checks (`HARD_LIMIT` against `max_amount`, and per-category `VELOCITY` sum against `window_cap`) before triggering validator LLMs.
+- **Fail-Closed Escalation**: Unparseable responses or subjective ambiguity fail closed to `ESCALATE`, routing to the policy owner for manual resolution.
+- **Public Decision Ledger**: Records decisions in contract state, exposing a synchronous view query `court.view().is_cleared(decision_id)` for downstream smart contracts.
+- **Advisory Role**: Does not hold private keys, custody tokens, or execute financial transactions directly.
 
 ---
 

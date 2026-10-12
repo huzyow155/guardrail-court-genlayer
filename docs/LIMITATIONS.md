@@ -26,9 +26,9 @@
    - However, this single test observation on an overtly prohibited action does not prove immunity to prompt injections in general. Complex semantic adversarial attacks, indirect jailbreaks, or subtly disguised prohibited intent could potentially mislead model validators if policies are ambiguously phrased.
 
 6. **Off-Chain Test Harness Execution**:
-   - Unit tests execute directly against `contracts/GuardrailCourt.py` contract methods using a lightweight `genlayer` stub in Python.
-   - Unit tests run off-chain without GenVM WASM execution.
-   - Tests titled `test_injection_resistance` and `test_defense_against_validator_hallucination` validate JSON parsing resilience and fail-closed fallback logic against mocked synthetic strings; they do not measure adversarial robustness of actual foundation LLMs.
+   - The 25 unit tests execute contract code directly from `contracts/GuardrailCourt.py` through a minimal `genlayer` stub on CPython, replacing `strict_eq` and `exec_prompt` with mocks.
+   - These tests run off-chain without GenVM WASM execution and do not exercise consensus or live model behavior.
+   - Tests validating JSON parsing resilience and fail-closed fallback logic run against mocked synthetic strings; they do not measure adversarial robustness of actual foundation LLMs in a decentralized validator network.
 
 7. **Policy Statistics State Mechanics**:
    - `get_policy_stats` dynamically calculates counts across all decisions currently linked to a policy.

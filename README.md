@@ -96,8 +96,9 @@ Transactions executed and verified on GenLayer Studionet (see [`docs/VERIFICATIO
 ## How to Test
 
 ```bash
-# Run all layered tests (Pure logic, mocked simulator, consensus simulation, boundary checks)
-# Note: Layer 2 and Layer 3 tests execute against an off-chain Python simulator and do not execute under GenVM.
+# Run all 25 unit tests
+# Note: These 25 unit tests run contract code through a minimal genlayer stub on CPython,
+# replacing strict_eq and exec_prompt with mocks, and do not exercise consensus or model behavior.
 python -m unittest discover tests
 
 # Run security scanners
