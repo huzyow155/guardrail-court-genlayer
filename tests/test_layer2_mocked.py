@@ -21,7 +21,7 @@ class UserError(Exception):
 class GuardrailCourtSimulator:
     """
     Pure-Python simulator of GuardrailCourt contract for Layer 2 test validation.
-    Maintains exact logic, error messages, and state transitions of GuardrailCourt.py.
+    Maintains logic, error messages, and state transitions aligned with GuardrailCourt.py.
     """
     def __init__(self):
         self.policies = {}

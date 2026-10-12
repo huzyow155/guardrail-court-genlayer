@@ -40,22 +40,25 @@
 | **(e-5)** | Velocity Step 5: Salami trip (360+90 > 400) | `0x87339f78182a6b95bbc465154b9b0ed825f4aa5687665d1585d5e631387e1604` | 5.30s | `VELOCITY` | `ESCALATE` | `false` (Zero LLM call) |
 | **(f)** | Owner resolves Decision 3 to ALLOW | `0x5fbd13afeef7029c70ee2b51377a1e0d8646517aa269430c25b784137b25fadd` | 8.47s | Owner | `ALLOW` | `true` (`resolved_by_owner`) |
 | **(g)** | Injection attempt on forbidden action | `0x5f71327df1b6d8c725572cc9e7572b16c186ddf6efc0bf497ce6a68eed33ff67` | 15.28s | `JUDGE` | `DENY` | `false` |
-| **(h)** | Owner Pause kill-switch toggle | `0xf739cb6bb69a7d4a9a065b16be46edf6c721fd6453548b666bca46ba40fa93a4` | 4.88s | Owner | `PAUSED` | Subsequent requests rejected |
+| **(h)** | Owner Pause kill-switch toggle | `0xf739cb6bb69a7d4a9a065b16be46edf6c721fd6453548b666bca46ba40fa93a4` | - | Owner | `PAUSED` | Subsequent requests rejected |
 
 ---
 
 ## Latency Measurement Methodology and Statistical Summary
 
 - **Timing Methodology**: Latency measured via `Date.now()` timestamp deltas immediately before calling `writeContract` until `waitForTransactionReceipt` returns the accepted transaction receipt from the Studionet RPC node.
-- **Source Data File**: `scripts/deploy/live_evidence.json`
+- **Source Data File**: `scripts/deploy/live_evidence.json` (contains exactly 11 recorded `latencySec` entries).
+- **Polling Quantization**: `waitForTransactionReceipt` was configured with `interval: 3000` ms, introducing up to 3s polling discretization jitter.
 
 ### Latency by Execution Type
 1. **Deterministic Guard Short-Circuits**:
-   - `HARD_LIMIT` DENY (n=1): **5.26s**
-   - `VELOCITY` ESCALATE (n=1): **5.30s**
-   - Owner State Writes (`resolve_escalation`, `set_paused`) (n=2): **4.88s - 8.47s** (Mean: 6.68s)
+   - `HARD_LIMIT` DENY (n=1): **5.26s** (Run d)
+   - `VELOCITY` ESCALATE (n=1): **5.30s** (Run e-5)
    - *Analysis*: Deterministic state checks eliminate the LLM inference loop entirely, completing ~70% faster than consensus rounds.
-2. **Multi-Validator LLM Consensus Rounds (`source: JUDGE`)**:
+2. **Owner State Writes**:
+   - `resolve_escalation` (n=1): **8.47s** (Run f)
+   - *(Note: Run h `set_paused` did not record a `latencySec` delta in `live_evidence.json`, so unrecorded numbers are excluded).*
+3. **Multi-Validator LLM Consensus Rounds (`source: JUDGE`)**:
    - Number of observations (n): **8**
    - Observations: `11.93s, 15.45s, 18.57s, 25.28s, 32.03s, 18.47s, 15.17s, 15.28s`
    - Minimum: **11.93s** (Run a)

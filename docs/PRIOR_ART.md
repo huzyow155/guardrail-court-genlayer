@@ -32,12 +32,12 @@ Conclusion regarding GenLayer prior art: **We found no prior intelligent contrac
   - Guardrail Court operates as a smart contract on GenLayer Studionet, where policy verdicts are evaluated via multi-validator equivalence consensus (`gl.eq_principle.strict_eq`) and recorded into persistent on-chain state queryable by other smart contracts.
 
 ### 2. Open Policy Agent (OPA) / AWS Cedar
-- **OPA Repository**: [https://github.com/open-policy-agent/opa](https://github.com/open-policy-agent/opa) (HTTP 200: *Open Policy Agent (OPA) is an open source, general-purpose policy engine.*)
-- **Cedar Documentation**: [https://docs.cedarpolicy.com/](https://docs.cedarpolicy.com/) (HTTP 200: *What is Cedar? | Cedar Policy Language Reference Guide*)
-- **Cedar Repository**: [https://github.com/cedar-policy/cedar](https://github.com/cedar-policy/cedar) (HTTP 200: *Implementation of the Cedar Policy Language*)
+- **OPA Repository**: [https://github.com/open-policy-agent/opa](https://github.com/open-policy-agent/opa) (HTTP 200: *"Open Policy Agent (OPA) is an open source, general-purpose policy engine."*)
+- **Cedar Documentation**: [https://docs.cedarpolicy.com/](https://docs.cedarpolicy.com/) (HTTP 200: *"Cedar is a language for writing and enforcing authorization policies."*)
+- **Cedar Repository**: [https://github.com/cedar-policy/cedar](https://github.com/cedar-policy/cedar) (HTTP 200: *"Implementation of the Cedar Policy Language"*)
 - **What Official Documentation Describes**:
-  - OPA evaluates structured JSON authorization queries against declarative logic written in Rego, targeting microservices, Kubernetes admission control, and API gateways.
-  - Cedar evaluates fine-grained authorization requests (principals, actions, resources) using a formally verified policy language designed for deterministic access control decisions.
+  - OPA: *"The Open Policy Agent is an open source, general-purpose policy engine that unifies policy enforcement across the stack."* ([https://www.openpolicyagent.org/docs/latest/](https://www.openpolicyagent.org/docs/latest/))
+  - Cedar: *"Cedar is an open source policy language and evaluation engine for fine-grained permissions."* ([https://github.com/cedar-policy/cedar](https://github.com/cedar-policy/cedar))
 - **Architectural Differences in Guardrail Court**:
   - OPA and Cedar evaluate structured attribute schemas through deterministic logic engines.
   - Guardrail Court interprets natural-language policy text (e.g. evaluating whether an action description is ambiguous or violates subjective business intent) alongside numeric boundary checks on-chain.
@@ -77,7 +77,6 @@ Conclusion regarding GenLayer prior art: **We found no prior intelligent contrac
 3. **Escalation / Human Approval**: Routing ambiguous or high-risk actions to human operators exists in enterprise incident and approval workflows (demonstrated by [PagerDuty](https://www.pagerduty.com/)).
 
 ### What We Found No Precedent For (Within Queried Scope)
-*Search tools used: `gh search repos` and GitHub search API, executed on 2026-10-11 across queries `agent policy genlayer`, `agent guardrail genlayer`, and `genlayer`.*
+*Search tools used: `gh search repos` and GitHub search API, executed on 2026-10-11 across queries `agent policy genlayer`, `agent guardrail genlayer`, and `genlayer`. Dựa trên các truy vấn GitHub đã nêu, thực hiện ngày 2026-10-11, không phải khẳng định không có dự án tương tự trên các nguồn khác.*
 1. **Multi-Validator Equivalence Consensus on Natural Language Agent Policies**: Evaluating an autonomous agent's qualitative action description against natural-language policy guidelines using GenLayer validator consensus (`gl.eq_principle.strict_eq`), producing an on-chain verdict without external oracles.
 2. **Hybrid Guard Architecture on GenVM**: Combining zero-inference deterministic pre-guards (`HARD_LIMIT` and per-category `VELOCITY` calculations) with fail-closed LLM equivalence consensus (`ALLOW`, `DENY`, or `ESCALATE`) in a single smart contract.
-3. **Synchronous Cross-Contract Clearance Verification**: Enabling downstream intelligent contracts (such as `GuardedVault`) to synchronously verify natural-language clearance decisions via view calls (`is_cleared(decision_id)`) before recording state execution.

@@ -78,7 +78,7 @@ class TestLayer1Pure(unittest.TestCase):
     def test_star_test_salami_slicing(self):
         """
         The Star Test (Salami Slicing):
-        Per-action cap 100, rolling window cap 400.
+        Per-action cap 100, category velocity cap 400 (max 10 recent same-category decisions).
         Agent sends six actions of amount 90 in one category ('cloud_ops').
         
         Naive Baseline (per-action judge only):

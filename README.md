@@ -33,7 +33,7 @@ Autonomous AI agents equipped with discretionary capabilities, API tokens, or on
                                      | Passes
                                      v
                       +-----------------------------+
-                      |  2. Velocity History Guard  |  Rolling sum > window_cap? -> ESCALATE (Zero LLM, ~5s)
+                      |  2. Velocity History Guard  |  Cleared sum in category (max 10) > window_cap? -> ESCALATE (~5s)
                       +--------------+--------------+
                                      | Passes
                                      v
@@ -58,10 +58,10 @@ Autonomous AI agents equipped with discretionary capabilities, API tokens, or on
 ### 1. Two-Tier Evaluation Architecture
 1. **Deterministic Guard (Pre-LLM)**:
     - `HARD_LIMIT`: If `amount > max_amount`, rejects immediately with `source: HARD_LIMIT` and `status: DENIED` (5.26s measured).
-    - `VELOCITY`: Computes rolling sum of cleared actions over the last 10 decisions in the category. If `sum + amount > window_cap`, routes directly to `source: VELOCITY` and `status: PENDING_OWNER` (5.30s measured).
+    - `VELOCITY`: Computes total amount of up to 10 most recent cleared decisions in the same category. If `sum + amount > window_cap`, routes directly to `source: VELOCITY` and `status: PENDING_OWNER` (5.30s measured). Note: Does not aggregate across time duration or across different categories.
 2. **Multi-Validator Consensus (`JUDGE`)**:
    - Actions within numeric limits are dispatched to independent validators executing diverse model families.
-   - Validators reach consensus exclusively on a single canonical enum: `ALLOW`, `DENY`, or `ESCALATE` (measured range: 11.93s to 32.03s, mean: 19.02s).
+   - Validators reach consensus exclusively on a single canonical enum: `ALLOW`, `DENY`, or `ESCALATE` (measured range: 11.93s to 32.03s, exact arithmetic mean: 19.02s across n=8 verified transactions).
    - Any ambiguous purchase or malformed response fails closed to `ESCALATE`.
 
 ---

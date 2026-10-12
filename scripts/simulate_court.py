@@ -27,8 +27,7 @@ def run_demo():
     print(f"\n[1] Registered Policy 1:")
     print(f"    Owner: {policy['owner']}")
     print(f"    Agent: {policy['agent']}")
-    print(f"    Max Per-Action Cap: {policy['max_amount']}")
-    print(f"    Rolling Window Cap: {policy['window_cap']}")
+    print(f"    Velocity Cap (10 most recent same-category decisions): {policy['window_cap']}")
     print(f"    Policy Text: {policy['text']}")
 
     history = []
@@ -45,7 +44,7 @@ def run_demo():
         # Velocity
         vel = velocity_guard(history, category, amount, policy['window_cap'])
         if vel == "ESCALATE":
-            print("     [EVALUATION] Trips rolling window cap! Escalating to owner.")
+            print("     [EVALUATION] Trips category velocity cap! Escalating to owner.")
             return {"verdict": "ESCALATE", "source": "VELOCITY", "status": "PENDING_OWNER"}
 
         # Model Judge simulation

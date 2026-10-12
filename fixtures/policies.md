@@ -6,7 +6,7 @@ This fixture defines the baseline policies and actions used for validation, test
 - **Owner**: `0x...` (Creator)
 - **Agent**: `0x...` (Designated AI Agent address)
 - **Max Action Cap**: 100
-- **Rolling Window Cap (10 actions)**: 400
+- **Velocity Cap (tối đa 10 quyết định gần nhất cùng category)**: 400
 - **Policy Text**:
 > "The agent may buy cloud credits, domain renewals and developer tools. It may not buy gift cards, tokens, gambling, adult content, or anything intended as a gift to an individual. If a purchase is ambiguous, escalate to the owner."
 
