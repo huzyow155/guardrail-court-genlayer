@@ -12,6 +12,12 @@
     "ownerAddress": "0x1BDbF9D058492d2bB0553bf3d9aC5730B5e5d3be",
     "agentAddress": "0x1b1E4A79E286434c428a576E6d91BC2220661cf3"
   },
+  "consumer": {
+    "contractName": "GuardedVault",
+    "status": "deployed",
+    "contractAddress": "0xc3B3Ea32C3B74cD17Ab00E175B6D34ce1c9dbc2C",
+    "deployTxHash": "0x8b966471667987e8b1731cbf622437f7093ed81149b1050b74b34e51b41300ce"
+  },
   "superseded": [
     {
       "contractName": "Probe",

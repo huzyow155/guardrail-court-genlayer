@@ -19,7 +19,7 @@ Inside the non-deterministic block, each validator runs `gl.nondet.exec_prompt(p
 Any unparseable string, malformed JSON, prompt-injection rambling, missing key, or unexpected output deterministically resolves to `"ESCALATE"`. In Guardrail Court, consensus never defaults to `ALLOW`.
 
 ### What Is Deliberately Excluded from Consensus
-- **Free-Form Rationales**: Validators never compare natural-language explanations, chain-of-thought traces, or markdown justifications. Earlier Studionet deployments proved that LLM-extracted secondary fields diverge across diverse validator model architectures (Grok, Claude, Gemini, Qwen), which would break `strict_eq` consensus.
+- **Free-Form Rationales**: Validators never compare natural-language explanations, chain-of-thought traces, or secondary text fields. Multi-validator consensus on GenLayer requires exact string equivalence (`strict_eq`); comparing free-form text or non-deterministic secondary fields across distinct validator model instances causes divergence and consensus failure.
 - **Timestamps and Dynamic External State**: All inputs into the prompt are precomputed and fetched from deterministic GenVM storage *before* entering the non-deterministic block. Storage access inside the non-deterministic function is strictly avoided.
 
 ---

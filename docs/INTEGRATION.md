@@ -15,7 +15,7 @@
   - `agent`: Hex address string of the AI agent (`0x...` 40 hex chars).
   - `text`: Natural-language policy description (30 to 1200 chars).
   - `max_amount`: Per-action cap string (non-negative integer <= 18 digits, `"0"` = unlimited).
-  - `window_cap`: 10-action rolling window cap string (non-negative integer <= 18 digits, `"0"` = unlimited).
+  - `window_cap`: Category velocity spending cap string for up to 10 most recent cleared actions (non-negative integer <= 18 digits, `"0"` = unlimited).
 - **Returns**: `policy_id` (e.g., `"1"`).
 - **Latency**: ~1-3s (deterministic execution).
 

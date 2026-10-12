@@ -32,25 +32,25 @@ Conclusion regarding GenLayer prior art: **We found no prior intelligent contrac
   - Guardrail Court operates as a smart contract on GenLayer Studionet, where policy verdicts are evaluated via multi-validator equivalence consensus (`gl.eq_principle.strict_eq`) and recorded into persistent on-chain state queryable by other smart contracts.
 
 ### 2. Open Policy Agent (OPA) / AWS Cedar
-- **OPA Repository**: [https://github.com/open-policy-agent/opa](https://github.com/open-policy-agent/opa) (HTTP 200: *"Open Policy Agent (OPA) is an open source, general-purpose policy engine."*)
-- **Cedar Documentation**: [https://docs.cedarpolicy.com/](https://docs.cedarpolicy.com/) (HTTP 200: *"Cedar is a language for writing and enforcing authorization policies."*)
-- **Cedar Repository**: [https://github.com/cedar-policy/cedar](https://github.com/cedar-policy/cedar) (HTTP 200: *"Implementation of the Cedar Policy Language"*)
+- **OPA Repository**: [https://github.com/open-policy-agent/opa](https://github.com/open-policy-agent/opa) (HTTP 200: *"Open Policy Agent (OPA) is an open source, general-purpose policy engine that enables unified, context-aware policy enforcement across the entire stack."*)
+- **OPA Documentation**: [https://www.openpolicyagent.org/docs/latest/](https://www.openpolicyagent.org/docs/latest/) (HTTP 200: *"OPA decouples policy decision-making from policy enforcement."*)
+- **Cedar Documentation**: [https://docs.cedarpolicy.com/](https://docs.cedarpolicy.com/) (HTTP 200: *"Cedar is a language for writing authorization policies and making authorization decisions based on those policies."*)
 - **What Official Documentation Describes**:
-  - OPA: *"The Open Policy Agent is an open source, general-purpose policy engine that unifies policy enforcement across the stack."* ([https://www.openpolicyagent.org/docs/latest/](https://www.openpolicyagent.org/docs/latest/))
-  - Cedar: *"Cedar is an open source policy language and evaluation engine for fine-grained permissions."* ([https://github.com/cedar-policy/cedar](https://github.com/cedar-policy/cedar))
+  - OPA: *"OPA decouples policy decision-making from policy enforcement."* ([https://www.openpolicyagent.org/docs/latest/](https://www.openpolicyagent.org/docs/latest/))
+  - Cedar: *"Cedar is a language for writing authorization policies and making authorization decisions based on those policies."* ([https://docs.cedarpolicy.com/](https://docs.cedarpolicy.com/))
 - **Architectural Differences in Guardrail Court**:
   - OPA and Cedar evaluate structured attribute schemas through deterministic logic engines.
   - Guardrail Court interprets natural-language policy text (e.g. evaluating whether an action description is ambiguous or violates subjective business intent) alongside numeric boundary checks on-chain.
 
 ### 3. Safe Smart Account & Safe Allowance Modules
 - **Safe Smart Account Repository**: [https://github.com/safe-fndn/safe-smart-account](https://github.com/safe-fndn/safe-smart-account) (HTTP 200: *Safe allows secure management of blockchain assets.*)
-- **Safe Modules Repository**: [https://github.com/safe-fndn/safe-modules](https://github.com/safe-fndn/safe-modules) (HTTP 200: *A collection of modules that can be used with the Safe contract.*)
-- **Zodiac Protocol Repository**: [https://github.com/gnosisguild/zodiac](https://github.com/gnosisguild/zodiac) (HTTP 200: *A collection of tools built according to an open standard for composable DAO tooling.*)
+- **Safe Modules Repository**: [https://github.com/safe-fndn/safe-modules](https://github.com/safe-fndn/safe-modules) (HTTP 200: *"A collection of modules that can be used with the Safe contract"*)
+- **Zodiac Protocol Repository**: [https://github.com/gnosisguild/zodiac](https://github.com/gnosisguild/zodiac) (HTTP 200: *"Zodiac is a collection of tools built according to an open standard."*)
 - **What Official Documentation Describes**:
   - Safe allowance modules enforce per-token allowances and time-based spending limits on smart accounts through on-chain EVM checks.
 - **Architectural Differences in Guardrail Court**:
   - Safe modules enforce deterministic token transfer caps and call authorizations on EVM chains.
-  - Guardrail Court serves as an advisory gate that parses qualitative natural-language justification before an action is cleared, recording verdicts on-chain for downstream contract consumption.
+  - Guardrail Court serves as an advisory gate that parses qualitative natural-language description before an action is cleared, recording verdicts on-chain for downstream contract consumption.
 
 ---
 
@@ -62,7 +62,7 @@ Conclusion regarding GenLayer prior art: **We found no prior intelligent contrac
 | **Policy Language** | Colang & Python (LLM checks supported) | Declarative DSL (Rego / Cedar) | Strict token and numeric parameters | **Natural Language + Hard Numeric Caps** |
 | **Validator Consensus** | Single local LLM invocation (0 consensus) | Single evaluator (0 consensus) | Cryptographic signature validation | **Multi-Validator Equivalence Consensus (`strict_eq`)** |
 | **Ambiguity Handling** | Configurable fallback / refuse | Boolean evaluation failure | Reject transaction | **Explicit `ESCALATE` verdict -> Owner Inbox** |
-| **Salami-Slicing Defense** | Requires external database | Requires external state storage | Rolling token allowance per token | **On-Chain Category Velocity Guard (`velocity_guard`)** |
+| **Salami-Slicing Defense** | Application-level state or action server | External context cache / data store | Periodic token allowance per token | **On-Chain Category Velocity Guard (`velocity_guard`)** |
 | **On-Chain Audit Log** | None (private server logs) | None (private daemon logs) | Transaction receipts on EVM | **Public, immutable decision ledger with queries** |
 | **Cross-Contract Interoperability** | None | None | EVM contract calls | **Synchronous on-chain view query (`is_cleared`)** |
 | **Execution Role** | Interceptor / wrapper | Policy decision point (PDP) | Direct asset transfer limiter | **Advisory Policy Gate (does not hold funds)** |
@@ -73,7 +73,7 @@ Conclusion regarding GenLayer prior art: **We found no prior intelligent contrac
 
 ### What Is NOT New
 1. **Agent Guardrail Interception**: Using an intermediary gate to evaluate tool calls or proposed agent actions before dispatch is an established paradigm (demonstrated by [NeMo Guardrails](https://github.com/NVIDIA-NeMo/Guardrails)).
-2. **Deterministic Spending Caps**: Enforcing per-action amounts and rolling allowances is standard practice in smart contract security (demonstrated by [Safe Allowance Modules](https://github.com/safe-fndn/safe-modules)).
+2. **Deterministic Spending Caps**: Enforcing per-action amounts and periodic spending allowances is standard practice in smart contract security (demonstrated by [Safe Allowance Modules](https://github.com/safe-fndn/safe-modules)).
 3. **Escalation / Human Approval**: Routing ambiguous or high-risk actions to human operators exists in enterprise incident and approval workflows (demonstrated by [PagerDuty](https://www.pagerduty.com/)).
 
 ### What We Found No Precedent For (Within Queried Scope)

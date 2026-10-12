@@ -6,9 +6,10 @@
    - Downstream executors (vaults, paymasters, trading wrappers, Safe modules) are required to query `is_cleared(decision_id)` before releasing assets or triggering side effects. If an executor fails to verify clearance, Guardrail Court cannot prevent execution.
    - The included consumer contract (`GuardedVault` at `0xc3B3Ea32C3B74cD17Ab00E175B6D34ce1c9dbc2C`) is a demonstration consumer illustrating synchronous cross-contract view queries (`court.view().is_cleared(did)`). It records execution records in contract storage and does not hold or transfer native cryptocurrency.
 
-2. **Per-Category Velocity Window Isolation**:
+2. **Per-Category Velocity Window Isolation & Prompt History Boundaries**:
    - The velocity guard (`_velocity_guard` in `contracts/GuardrailCourt.py`, lines 82-103) groups recent transactions strictly by `category` (`if d.get("category") == category:`).
-   - Rolling expenditure is not aggregated across different categories within the window. For example, Decision 1 (category `dev_tools`, amount 45) is not counted against the rolling accumulator of Decision 9 (category `cloud_ops`, amount 90).
+   - Category expenditure is not aggregated across different categories within the 10-decision history window. For example, Decision 1 (category `dev_tools`, amount 45) is not counted against the category accumulator of Decision 9 (category `cloud_ops`, amount 90). An agent could potentially distribute spending across multiple categories to stay below per-category limits.
+   - Context window carry-forward: In `request_action` (lines 260-267), up to 8 recent decisions from policy history are embedded into the `=== BEGIN RECENT HISTORY ===` prompt block. If previous action descriptions contained injection payloads or misleading phrasing that cleared evaluation, those strings are carried forward into future validator evaluation contexts.
    - In addition, the contract does not generate or store human-readable reason notes or numeric risk scores; it stores canonical verdict (`ALLOW`, `DENY`, `ESCALATE`), source (`HARD_LIMIT`, `VELOCITY`, `JUDGE`), and clearance status.
 
 3. **Validator Consensus Scope (`strict_eq`)**:
