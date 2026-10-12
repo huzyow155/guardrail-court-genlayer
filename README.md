@@ -68,6 +68,7 @@ Autonomous AI agents equipped with discretionary capabilities, API tokens, or on
 
 ## Non-Goals
 - **No Execution or Custody**: The contract does not execute transactions, custody tokens, or hold private keys. It publishes clearance decisions.
+- **Demo Consumer Role**: The accompanying `GuardedVault` consumer contract is a test harness illustrating cross-contract clearance verification via `court.view().is_cleared(decision_id)`. It does not custody or transfer real cryptocurrencies.
 - **Advisory Role**: The contract is advisory unless downstream executors verify `is_cleared(decision_id)`.
 - **Currency Agnostic**: The contract does not interpret denominations (USD, EUR, ETH, wei); amounts are non-negative integer strings.
 - **Unreported Actions**: It cannot constrain actions that an agent operator fails to submit.
@@ -120,7 +121,7 @@ node scripts/deploy/deploy_probe.js
 node scripts/deploy/deploy_core.js
 
 # Deploy full contract and run evidence rounds (Milestone 4)
-# (see scripts/deploy/run_live_evidence.js)
+node scripts/deploy/run_live_evidence.js
 
 # Deploy consumer contract for cross-contract validation (Milestone 5)
 node scripts/deploy/deploy_consumer.js

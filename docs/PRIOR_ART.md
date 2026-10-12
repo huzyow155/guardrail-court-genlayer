@@ -22,35 +22,35 @@ Conclusion regarding GenLayer prior art: **We found no prior intelligent contrac
 ## Detailed Examination of Closest External Solutions
 
 ### 1. NVIDIA NeMo Guardrails
-- **Official Documentation**: [https://docs.nvidia.com/nemo/guardrails/latest/index.html](https://docs.nvidia.com/nemo/guardrails/latest/index.html) (HTTP 200: *Overview | NVIDIA NeMo Guardrails Library Developer Guide*)
+- **Official Documentation**: [https://docs.nvidia.com/nemo/guardrails/about-nemo-guardrails-library/overview](https://docs.nvidia.com/nemo/guardrails/about-nemo-guardrails-library/overview) (HTTP 200: *About NeMo Guardrails Library | Overview*)
 - **Source Repository**: [https://github.com/NVIDIA-NeMo/Guardrails](https://github.com/NVIDIA-NeMo/Guardrails) (HTTP 200: *NeMo Guardrails is an open-source toolkit for easily adding programmable guardrails to LLM-based conversational systems.*)
-- **What NeMo Guardrails Actually Does**:
-  - Provides programmable rails using Colang and Python for LLM-based conversational systems.
-  - Supports topical moderation, jailbreak checks, and output self-checking via local LLM calls, embeddings, or secondary model verification.
-  - Can be invoked as an asynchronous middleware or Python library within an agent application.
-- **Specific Differences from Guardrail Court**:
-  - NeMo runs as an off-chain Python library or sidecar controlled entirely by the agent host. A compromised agent process or infrastructure operator can silently disable or bypass the rails.
-  - Operates on a single LLM invocation per rail check (zero independent multi-party consensus).
-  - Does not provide an immutable public audit ledger or cross-contract smart contract readability.
+- **What Official Documentation Describes**:
+  - NeMo Guardrails provides programmable rails using Colang and Python to control LLM outputs, including topical guidance, safety moderation, and LLM self-checking rails.
+  - Rails execute within application middleware or Python services to validate conversational context and model inputs/outputs.
+- **Architectural Differences in Guardrail Court**:
+  - NeMo Guardrails operates within the application server or middleware stack of the agent host.
+  - Guardrail Court operates as a smart contract on GenLayer Studionet, where policy verdicts are evaluated via multi-validator equivalence consensus (`gl.eq_principle.strict_eq`) and recorded into persistent on-chain state queryable by other smart contracts.
 
 ### 2. Open Policy Agent (OPA) / AWS Cedar
 - **OPA Repository**: [https://github.com/open-policy-agent/opa](https://github.com/open-policy-agent/opa) (HTTP 200: *Open Policy Agent (OPA) is an open source, general-purpose policy engine.*)
 - **Cedar Documentation**: [https://docs.cedarpolicy.com/](https://docs.cedarpolicy.com/) (HTTP 200: *What is Cedar? | Cedar Policy Language Reference Guide*)
 - **Cedar Repository**: [https://github.com/cedar-policy/cedar](https://github.com/cedar-policy/cedar) (HTTP 200: *Implementation of the Cedar Policy Language*)
-- **What OPA and Cedar Actually Do**:
-  - Evaluate structured JSON authorization requests against formal declarative logic rules (Rego for OPA, Cedar for AWS Cedar).
-  - Provide deterministic attribute-based access control (ABAC) and role-based access control (RBAC).
-- **Specific Differences from Guardrail Court**:
-  - Strictly deterministic rule evaluation over structured data fields. They do not interpret natural-language semantic policies (e.g., "no gifts to individuals, nothing that could look like pressuring a customer") and cannot evaluate contextual qualitative text.
+- **What Official Documentation Describes**:
+  - OPA evaluates structured JSON authorization queries against declarative logic written in Rego, targeting microservices, Kubernetes admission control, and API gateways.
+  - Cedar evaluates fine-grained authorization requests (principals, actions, resources) using a formally verified policy language designed for deterministic access control decisions.
+- **Architectural Differences in Guardrail Court**:
+  - OPA and Cedar evaluate structured attribute schemas through deterministic logic engines.
+  - Guardrail Court interprets natural-language policy text (e.g. evaluating whether an action description is ambiguous or violates subjective business intent) alongside numeric boundary checks on-chain.
 
-### 3. Safe Smart Account & Safe Spending Limit Modules
+### 3. Safe Smart Account & Safe Allowance Modules
 - **Safe Smart Account Repository**: [https://github.com/safe-fndn/safe-smart-account](https://github.com/safe-fndn/safe-smart-account) (HTTP 200: *Safe allows secure management of blockchain assets.*)
 - **Safe Modules Repository**: [https://github.com/safe-fndn/safe-modules](https://github.com/safe-fndn/safe-modules) (HTTP 200: *A collection of modules that can be used with the Safe contract.*)
-- **What Safe Spending Limits Actually Do**:
-  - Implements on-chain allowance modules attached to multi-signature smart contracts.
-  - Enforces deterministic numeric limits on asset transfers: tracking spent amounts per token per beneficiary within a specific reset time window.
-- **Specific Differences from Guardrail Court**:
-  - Confined to on-chain asset transfers and deterministic numeric token counters. Safe modules cannot inspect natural-language intent, recipient relationships, business justifications, or qualitative policy boundaries.
+- **Zodiac Protocol Repository**: [https://github.com/gnosisguild/zodiac](https://github.com/gnosisguild/zodiac) (HTTP 200: *A collection of tools built according to an open standard for composable DAO tooling.*)
+- **What Official Documentation Describes**:
+  - Safe allowance modules enforce per-token allowances and time-based spending limits on smart accounts through on-chain EVM checks.
+- **Architectural Differences in Guardrail Court**:
+  - Safe modules enforce deterministic token transfer caps and call authorizations on EVM chains.
+  - Guardrail Court serves as an advisory gate that parses qualitative natural-language justification before an action is cleared, recording verdicts on-chain for downstream contract consumption.
 
 ---
 
@@ -69,14 +69,15 @@ Conclusion regarding GenLayer prior art: **We found no prior intelligent contrac
 
 ---
 
-## Honest Differentiation: What Is NOT New vs What We Found No Precedent For
+## Differentiation: What Is NOT New vs What We Found No Precedent For
 
 ### What Is NOT New
-1. **Agent Guardrail Interception**: Using an intermediary gate to evaluate tool calls or proposed agent actions before dispatch is an established paradigm (demonstrated by NeMo Guardrails and Guardrails AI).
-2. **Deterministic Spending Caps**: Enforcing per-action amounts and rolling allowances is standard practice in smart contract security (demonstrated by Safe Allowance modules).
-3. **Escalation / Human Approval**: Routing ambiguous or high-value actions to human operators exists in enterprise workflow systems and dual-control approvals.
+1. **Agent Guardrail Interception**: Using an intermediary gate to evaluate tool calls or proposed agent actions before dispatch is an established paradigm (demonstrated by [NeMo Guardrails](https://github.com/NVIDIA-NeMo/Guardrails)).
+2. **Deterministic Spending Caps**: Enforcing per-action amounts and rolling allowances is standard practice in smart contract security (demonstrated by [Safe Allowance Modules](https://github.com/safe-fndn/safe-modules)).
+3. **Escalation / Human Approval**: Routing ambiguous or high-risk actions to human operators exists in enterprise incident and approval workflows (demonstrated by [PagerDuty](https://www.pagerduty.com/)).
 
 ### What We Found No Precedent For (Within Queried Scope)
-1. **Multi-Validator Consensus on Natural-Language Agent Policies**: Evaluating an autonomous agent's action description against a natural-language policy through independent, multi-party validator consensus (`strict_eq`) rather than relying on a single centralized model or the agent's own host environment.
-2. **Hybrid Guard Architecture on GenVM**: Combining zero-latency deterministic pre-guards (`HARD_LIMIT` and historical `VELOCITY` calculations) with fail-closed LLM equivalence consensus (`ALLOW`, `DENY`, or `ESCALATE`) in an on-chain contract.
-3. **Synchronous Cross-Contract Clearance Verification**: Allowing downstream smart contracts (such as `GuardedVault`) to synchronously verify natural-language clearance decisions via view calls (`is_cleared(decision_id)`) before releasing funds or executing state changes.
+*Search tools used: `gh search repos` and GitHub search API, executed on 2026-10-11 across queries `agent policy genlayer`, `agent guardrail genlayer`, and `genlayer`.*
+1. **Multi-Validator Equivalence Consensus on Natural Language Agent Policies**: Evaluating an autonomous agent's qualitative action description against natural-language policy guidelines using GenLayer validator consensus (`gl.eq_principle.strict_eq`), producing an on-chain verdict without external oracles.
+2. **Hybrid Guard Architecture on GenVM**: Combining zero-inference deterministic pre-guards (`HARD_LIMIT` and per-category `VELOCITY` calculations) with fail-closed LLM equivalence consensus (`ALLOW`, `DENY`, or `ESCALATE`) in a single smart contract.
+3. **Synchronous Cross-Contract Clearance Verification**: Enabling downstream intelligent contracts (such as `GuardedVault`) to synchronously verify natural-language clearance decisions via view calls (`is_cleared(decision_id)`) before recording state execution.

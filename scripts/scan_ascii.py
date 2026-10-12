@@ -22,16 +22,17 @@ def check_ascii(filepath):
         return True
 
 if __name__ == '__main__':
-    target = sys.argv[1] if len(sys.argv) > 1 else 'contracts'
+    targets = [sys.argv[1]] if len(sys.argv) > 1 else ['contracts', 'examples/consumer']
     all_ok = True
-    if os.path.isfile(target):
-        if not check_ascii(target):
-            all_ok = False
-    else:
-        for root, dirs, files in os.walk(target):
-            for file in files:
-                if file.endswith('.py'):
-                    p = os.path.join(root, file)
-                    if not check_ascii(p):
-                        all_ok = False
+    for target in targets:
+        if os.path.isfile(target):
+            if not check_ascii(target):
+                all_ok = False
+        elif os.path.isdir(target):
+            for root, dirs, files in os.walk(target):
+                for file in files:
+                    if file.endswith('.py'):
+                        p = os.path.join(root, file)
+                        if not check_ascii(p):
+                            all_ok = False
     sys.exit(0 if all_ok else 1)
