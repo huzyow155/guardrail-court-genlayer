@@ -77,8 +77,9 @@ class TestLayer3Consensus(unittest.TestCase):
         decision, agreed = self.simulate_validator_round(outputs)
         self.assertFalse(agreed)
 
-    def test_validators_with_malformed_outputs_fail_closed_to_escalate(self):
-        # If 3 validators produce corrupted/unparseable outputs, they all fail-closed to ESCALATE
+    def test_validators_with_malformed_outputs_escalate(self):
+        # Outputs that do not parse as valid JSON and do not contain the fallback '"VERDICT": "..."' substring
+        # default to ESCALATE (see LIMITATIONS #1 and test_parser_fallback_documents_known_fail_open_path for exception)
         outputs = [
             '{"verdict": "ALLOW"}',
             'corrupted output 1',

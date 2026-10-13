@@ -33,9 +33,9 @@ A dedicated probe contract (`Probe.py`) was deployed and executed live on GenLay
 
 1. **View Return Type for `is_cleared`**:
    The runtime probe confirmed that view methods returning `bool` serialize and return native JavaScript boolean values (`true` / `false`) cleanly. `is_cleared(decision_id) -> bool` can return a native `bool`.
-2. **Consensus String**:
-   Validators will compute a single canonical string (`ALLOW`, `DENY`, or `ESCALATE`) in the non-deterministic block. The model output is extracted, stripped of markdown fences, parsed as JSON, and strictly validated against the allowed enums. Any deviation or exception deterministically yields `ESCALATE`.
+2. **Consensus String & Parser Fallback**:
+   Validators compute a single canonical string (`ALLOW`, `DENY`, or `ESCALATE`) in the non-deterministic block. The model output is stripped of markdown fences and parsed as JSON. Outputs that do not parse as valid JSON generally yield `ESCALATE`; **HOWEVER**, the fallback branch matches the substring `"VERDICT": "ALLOW"` (or `'VERDICT': 'ALLOW'`) in upper-cased prose and returns `ALLOW` (see `test_parser_fallback_documents_known_fail_open_path` and `docs/LIMITATIONS.md` #1). The deployed contract is immutable.
 3. **Storage Handling**:
    Addresses will be normalized to lower-case hex before indexing in `by_owner` and `by_agent` `TreeMap[str, str]`.
 4. **Guard Short-Circuiting**:
-   `HARD_LIMIT` and `VELOCITY` calculations run deterministically before calling `gl.eq_principle.strict_eq`. When a rule trips, the decision is recorded immediately with zero LLM latency (~1-3s vs ~22s for validator LLM rounds).
+   `HARD_LIMIT` and `VELOCITY` calculations run deterministically before calling `gl.eq_principle.strict_eq`. When a rule trips, the decision is recorded without an LLM call (measured Studionet latency in `live_evidence.json`: **5.261s** and **5.305s**, n=2; owner resolve: **8.472s**, n=1; JUDGE consensus: **11.934s to 32.026s**, arithmetic mean **19.02s**, n=8; 3s polling interval introduces up to +/-3s quantization).

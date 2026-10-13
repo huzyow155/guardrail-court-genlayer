@@ -129,7 +129,7 @@ async function main() {
 
   // Run (e): VELOCITY sequence (actions of amount 90 tripping window cap 400)
   console.log("\n=== Run (e): VELOCITY Sequence (actions of amount 90) ===");
-  // We need multiple actions in same category 'cloud_ops' with amount 90.
+  // We send multiple actions under category 'cloud_ops' with amount 90.
   // 1st: 90 -> ALLOW (sum = 90 <= 400)
   // 2nd: 90 -> ALLOW (sum = 180 <= 400)
   // 3rd: 90 -> ALLOW (sum = 270 <= 400)

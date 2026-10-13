@@ -10,7 +10,8 @@
 - **Deploy Transaction Hash**: `0xe7a7ec9e6e1b1cf9f07696d251dc08118b7c865121551107850abb2938d81136`
 - **Deploy Transaction Receipt Status**: `ACCEPTED` (Result: `MAJORITY_AGREE`)
 - **Leader Execution Result**: `SUCCESS`
-- **Git Commit Hash**: `6549a4d02bbb2dd642c062c6819152135caa526f`
+- **Deploy Milestone Commit (`3d9a79d`)**: Commit where Milestone 4 Studionet deployment and `live_evidence.json` were recorded (`3d9a79d`)
+- **Initial Docs Release Commit (`6549a4d`)**: `6549a4d02bbb2dd642c062c6819152135caa526f` (initial README/docs release prior to post-deployment audit commits; `contracts/GuardrailCourt.py` SHA-256 has remained unchanged across all subsequent commits)
 - **Local Contract File**: `contracts/GuardrailCourt.py`
 - **Local Source SHA-256**: `dd3c61182f299699a55a3ffefb64fb472dba0b37c7b68def92235a577e179bbc`
 - **Deployment Registry SHA-256**: `dd3c61182f299699a55a3ffefb64fb472dba0b37c7b68def92235a577e179bbc`

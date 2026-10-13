@@ -47,7 +47,7 @@ class TestEdgeCasesAndLimits(unittest.TestCase):
         self.assertEqual(parse_model_verdict(fenced_with_spacing), "ALLOW")
 
     def test_velocity_window_truncation_to_10(self):
-        # If there are 15 historical decisions in same category, velocity_guard inspects only the last 10
+        # Within history_items passed to _velocity_guard, it takes up to 10 matching category items
         history = []
         # Add 5 old cleared decisions of amount 100
         for i in range(5):
@@ -56,10 +56,54 @@ class TestEdgeCasesAndLimits(unittest.TestCase):
         for i in range(10):
             history.insert(0, {"category": "test_cat", "amount": "10", "status": "CLEARED"})
         
-        # Newest 10 decisions have sum = 10 * 10 = 100
+        # Newest 10 matching items have sum = 10 * 10 = 100
         # If window_cap is 150 and amount is 40 -> 100 + 40 = 140 <= 150 -> PASS
         # If it incorrectly included the older 5 * 100 = 500, it would fail
         self.assertEqual(velocity_guard(history, "test_cat", 40, window_cap=150, window=10), "PASS")
+
+    def test_velocity_eviction_by_15_other_category_decisions(self):
+        """
+        Proves on the real GuardrailCourt contract that request_action fetches only
+        policy_history_ids[:15] across the entire policy before filtering by category.
+        If 15 newer decisions in category 'other_cat' occur after a 'target_cat' decision,
+        the older 'target_cat' decision is pushed outside policy_history_ids[:15] and not counted.
+        """
+        import json
+        gl = GuardrailCourt.gl
+        court = GuardrailCourt.GuardrailCourt()
+        court.__init__()
+
+        owner = "0x1111111111111111111111111111111111111111"
+        agent = "0x2222222222222222222222222222222222222222"
+
+        gl.message.sender_address.as_hex = owner
+        pid = court.create_policy(
+            agent,
+            "Policy allowing target_cat and other_cat purchases up to cap 100 and window 150.",
+            "100",
+            "150",
+        )
+
+        gl.message.sender_address.as_hex = agent
+        gl.nondet.prompt_result = '{"verdict": "ALLOW"}'
+
+        # 1. Submit 1 cleared request in 'target_cat' with amount 90 (cumulative in target_cat = 90)
+        d1 = court.request_action(pid, "target_cat", "90", "First target_cat purchase of 90")
+        self.assertEqual(json.loads(court.get_decision(d1))["status"], "CLEARED")
+
+        # 2. If we immediately requested another 90 in 'target_cat', 90 + 90 = 180 > 150 would ESCALATE.
+        # Instead, submit 15 requests in 'other_cat' (amount 10 each) to push d1 out of policy_history_ids[:15].
+        for i in range(15):
+            court.request_action(pid, "other_cat", "10", f"Intervening other_cat request #{i+1}")
+
+        # 3. Now submit a second request in 'target_cat' with amount 90.
+        # Because d1 is at index 15 (16th newest), policy_history_ids[:15] contains only 'other_cat' items.
+        # _velocity_guard sees 0 prior 'target_cat' spend (0 + 90 <= 150) and passes to JUDGE -> ALLOW!
+        d_after = court.request_action(pid, "target_cat", "90", "Second target_cat purchase after 15 other_cat items")
+        dec_after = json.loads(court.get_decision(d_after))
+        self.assertEqual(dec_after["source"], "JUDGE")
+        self.assertEqual(dec_after["verdict"], "ALLOW")
+        self.assertEqual(dec_after["status"], "CLEARED")
 
 
 if __name__ == '__main__':

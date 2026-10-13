@@ -33,7 +33,7 @@ Autonomous AI agents equipped with discretionary capabilities, API tokens, or on
                                      | Passes
                                      v
                       +-----------------------------+
-                      |  2. Velocity History Guard  |  Cleared sum in category (max 10) > window_cap? -> ESCALATE (~5s)
+                      |  2. Velocity History Guard  |  Cleared sum in category (from 15 recent) > window_cap? -> ESCALATE (~5s)
                       +--------------+--------------+
                                      | Passes
                                      v
@@ -57,19 +57,19 @@ Autonomous AI agents equipped with discretionary capabilities, API tokens, or on
 
 ### 1. Two-Tier Evaluation Architecture
 1. **Deterministic Guard (Pre-LLM)**:
-    - `HARD_LIMIT`: If `amount > max_amount`, rejects immediately with `source: HARD_LIMIT` and `status: DENIED` (5.26s measured).
-    - `VELOCITY`: Computes total amount of up to 10 most recent cleared decisions in the same category. If `sum + amount > window_cap`, routes directly to `source: VELOCITY` and `status: PENDING_OWNER` (5.30s measured). Note: Does not aggregate across time duration or across different categories.
+    - `HARD_LIMIT`: If `max_amount > 0` and `amount > max_amount` (`"0"` disables the limit), rejects immediately with `source: HARD_LIMIT` and `status: DENIED` (5.26s measured).
+    - `VELOCITY`: Scans `policy_history_ids[:15]` (the 15 most recent decisions of the entire policy across all categories), filters for decisions matching the requested `category` (up to 10 matching items), and sums `amount` where `status == "CLEARED"` or `verdict == "ALLOW"`. If `window_cap > 0` (`"0"` disables the cap) and `cleared_sum + amount > window_cap`, routes directly to `source: VELOCITY` and `status: PENDING_OWNER` (5.30s measured). Note: Does not aggregate across time duration or across different categories, and >15 intervening decisions in other categories will push older same-category decisions out of the 15-item scan window.
 2. **Multi-Validator Consensus (`JUDGE`)**:
-   - Actions within numeric limits are dispatched to independent validators executing diverse model families.
+   - Actions within numeric limits are dispatched to validators on the Studionet network (exact underlying model families run by network nodes are not verified from contract state).
    - Validators reach consensus exclusively on a single canonical enum: `ALLOW`, `DENY`, or `ESCALATE` (measured range: 11.93s to 32.03s, exact arithmetic mean: 19.02s across n=8 verified transactions).
-   - Any ambiguous purchase or malformed response fails closed to `ESCALATE`.
+   - Outputs that do not parse as valid JSON generally default to `ESCALATE`; **HOWEVER**, the fallback branch matches the substring `"VERDICT": "ALLOW"` (or `'VERDICT': 'ALLOW'`) in upper-cased prose before checking `DENY`, returning `ALLOW` if that substring appears in prose (see `test_parser_fallback_documents_known_fail_open_path` and `docs/LIMITATIONS.md` #1). The deployed contract is immutable.
 
 ---
 
 ## Non-Goals
 - **No Execution or Custody**: The contract does not execute transactions, custody tokens, or hold private keys. It publishes clearance decisions.
 - **Demo Consumer Role**: The accompanying `GuardedVault` consumer contract is a test harness illustrating cross-contract clearance verification via `court.view().is_cleared(decision_id)`. It does not custody or transfer real cryptocurrencies.
-- **Advisory Role**: The contract is advisory unless downstream executors verify `is_cleared(decision_id)`.
+- **Advisory Role**: The contract is advisory unless downstream executors verify `is_cleared(decision_id)` and independently check that the decision parameters match the executed action.
 - **Currency Agnostic**: The contract does not interpret denominations (USD, EUR, ETH, wei); amounts are non-negative integer strings.
 - **Unreported Actions**: It cannot constrain actions that an agent operator fails to submit.
 - **Not Scoped Credentials**: It is an audit and authorization gate, not an IAM or API key replacement.
@@ -89,15 +89,15 @@ Transactions executed and verified on GenLayer Studionet (see [`docs/VERIFICATIO
 | **(e)** | Salami-slicing velocity trip (5 x 90 > 400) | `0x87339f78182a6b95bbc465154b9b0ed825f4aa5687665d1585d5e631387e1604` | `ESCALATE` | `VELOCITY` | 5.30s | `false` |
 | **(f)** | Owner resolves Decision 3 to ALLOW | `0x5fbd13afeef7029c70ee2b51377a1e0d8646517aa269430c25b784137b25fadd` | `ALLOW` | Owner | 8.47s | `true` |
 | **(g)** | Prompt injection resistance on casino token | `0x5f71327df1b6d8c725572cc9e7572b16c186ddf6efc0bf497ce6a68eed33ff67` | `DENY` | `JUDGE` | 15.28s | `false` |
-| **(h)** | Owner Pause kill-switch toggle | `0xf739cb6bb69a7d4a9a065b16be46edf6c721fd6453548b666bca46ba40fa93a4` | `PAUSED` | Owner | 4.88s | Rejects writes |
+| **(h)** | Owner Pause kill-switch toggle | `0xf739cb6bb69a7d4a9a065b16be46edf6c721fd6453548b666bca46ba40fa93a4` | `PAUSED` | Owner | n/a (not recorded) | Rejects writes |
 
 ---
 
 ## How to Test
 
 ```bash
-# Run all 25 unit tests
-# Note: These 25 unit tests run contract code through a minimal genlayer stub on CPython,
+# Run all 27 unit tests
+# Note: These 27 unit tests run contract code through a minimal genlayer stub on CPython,
 # replacing strict_eq and exec_prompt with mocks, and do not exercise consensus or model behavior.
 python -m unittest discover tests
 

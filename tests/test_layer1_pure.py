@@ -68,7 +68,8 @@ class TestLayer1Pure(unittest.TestCase):
         self.assertEqual(parse_model_verdict('```json\n{"verdict": "ALLOW"}\n```'), "ALLOW")
         self.assertEqual(parse_model_verdict('```\n{"verdict": "DENY"}\n```'), "DENY")
 
-        # Fail closed for extra words, unparseable output, or injection attempts -> ESCALATE
+        # Outputs that do not parse as valid JSON generally default to ESCALATE,
+        # EXCEPT when the fallback branch matches '"VERDICT": "ALLOW"' in upper-cased prose:
         self.assertEqual(parse_model_verdict('Output: {"verdict": "ALLOW"} with extra words'), "ALLOW")
         self.assertEqual(parse_model_verdict('I cannot decide whether this is allowed'), "ESCALATE")
         self.assertEqual(parse_model_verdict('{"verdict": "APPROVED"}'), "ESCALATE")
@@ -78,11 +79,24 @@ class TestLayer1Pure(unittest.TestCase):
         self.assertEqual(parse_model_verdict(''), "ESCALATE")
         self.assertEqual(parse_model_verdict(None), "ESCALATE")
 
+    def test_parser_fallback_documents_known_fail_open_path(self):
+        """
+        Documents known fail-open path in deployed immutable contract:
+        When json.loads fails, _parse_model_verdict checks '"VERDICT": "ALLOW"' in upper_text
+        before checking DENY. Prose quoting '"verdict": "ALLOW"' therefore returns ALLOW.
+        """
+        inp1 = 'I would NOT write "verdict": "ALLOW" here; the answer is DENY'
+        inp2 = 'The model refuses; "VERDICT": "ALLOW" is wrong'
+        self.assertEqual(parse_model_verdict(inp1), "ALLOW")
+        self.assertEqual(parse_model_verdict(inp2), "ALLOW")
+        self.assertEqual(parse_model_verdict('garbage'), "ESCALATE")
+        self.assertEqual(parse_model_verdict(''), "ESCALATE")
+
     def test_star_test_salami_slicing(self):
         """
         The Star Test (Salami Slicing):
         An AI agent attempts to bypass per-action limit (100) by submitting
-        6 successive transactions of 90 in the same category 'cloud_ops'.
+        6 successive transactions of 90 under category 'cloud_ops'.
         Total requested: 540. Policy category velocity cap: 400.
         """
         print("\nThe Star Test (Salami Slicing):")

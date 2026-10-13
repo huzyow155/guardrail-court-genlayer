@@ -15,8 +15,8 @@ The non-deterministic function provided to `gl.eq_principle.strict_eq(run_judge)
 
 Inside the non-deterministic block, each validator runs `gl.nondet.exec_prompt(prompt)`. The raw model output is stripped of markdown fences, parsed defensively as JSON for `verdict`, trimmed, and upper-cased. If the result exactly matches `"ALLOW"`, `"DENY"`, or `"ESCALATE"`, that label is returned.
 
-### Fail-Closed Principle
-Any unparseable string, malformed JSON, prompt-injection rambling, missing key, or unexpected output deterministically resolves to `"ESCALATE"`. In Guardrail Court, consensus never defaults to `ALLOW`.
+### Fail-Closed Principle (and Known Fallback Exception)
+Outputs that do not parse as valid JSON generally resolve to `"ESCALATE"`; **HOWEVER**, when `json.loads` fails, the fallback branch in `_parse_model_verdict` checks for the substring `"VERDICT": "ALLOW"` (or `'VERDICT': 'ALLOW'`) in the upper-cased string *before* checking `"VERDICT": "DENY"`. Consequently, prose containing that substring evaluates to `"ALLOW"` (see `test_parser_fallback_documents_known_fail_open_path` in `tests/test_layer1_pure.py` and `docs/LIMITATIONS.md` #1). The deployed contract on Studionet is immutable.
 
 ### What Is Deliberately Excluded from Consensus
 - **Free-Form Rationales**: Validators never compare natural-language explanations, chain-of-thought traces, or secondary text fields. Multi-validator consensus on GenLayer requires exact string equivalence (`strict_eq`); comparing free-form text or non-deterministic secondary fields across distinct validator model instances causes divergence and consensus failure.
@@ -28,11 +28,11 @@ Any unparseable string, malformed JSON, prompt-injection rambling, missing key, 
 
 1. **Deterministic Guard Tier (Pre-LLM)**
    Executed entirely by deterministic Python code before any validator LLM call:
-   - **`HARD_LIMIT`**: If `max_amount > 0` and `amount > max_amount`, the action is immediately rejected with verdict `DENY`, source `HARD_LIMIT`, and status `DENIED`. Zero LLM latency (~1s).
-   - **`VELOCITY`**: Evaluates `velocity_guard(history, category, amount, window_cap, window=10)`. Sums all cleared amounts within the last 10 decisions in the same category. If `window_cap > 0` and `cleared_sum + amount > window_cap`, the action trips the velocity limit and is routed to verdict `ESCALATE`, source `VELOCITY`, and status `PENDING_OWNER`. Zero LLM latency (~1s).
+   - **`HARD_LIMIT`**: If `max_amount > 0` and `amount > max_amount`, the action is immediately rejected with verdict `DENY`, source `HARD_LIMIT`, and status `DENIED`. Measured Studionet latency: **5.261s** (n=1, 3s polling interval).
+   - **`VELOCITY`**: `request_action` fetches `policy_history_ids[:15]` (the 15 most recent decisions of the entire policy across all categories), then `_velocity_guard(history_items, category, int_amount, win_cap, window=10)` filters for decisions matching `category`, takes up to 10 matching items, and sums `amount` where `status == "CLEARED"` or `verdict == "ALLOW"`. If `window_cap > 0` and `cleared_sum + amount > window_cap`, the action trips the velocity limit and is routed to verdict `ESCALATE`, source `VELOCITY`, and status `PENDING_OWNER`. There is no time-duration window. Measured Studionet latency: **5.305s** (n=1, 3s polling interval).
 
 2. **Multi-Validator Consensus Tier (`JUDGE`)**
-   Actions that satisfy both numeric guards are evaluated by multi-validator LLM consensus against the owner's policy text and the last 8 decisions in the category. Validators converge on `ALLOW` (`CLEARED`), `DENY` (`DENIED`), or `ESCALATE` (`PENDING_OWNER`).
+   Actions that satisfy both numeric guards are evaluated by multi-validator LLM consensus against the owner's policy text and `history_items[:8]` (the 8 most recent decisions of the entire policy across all categories, formatted with `category`, `amount`, and `verdict` only). Validators converge on `ALLOW` (`CLEARED`), `DENY` (`DENIED`), or `ESCALATE` (`PENDING_OWNER`). Measured Studionet latency: **11.934s to 32.026s** (arithmetic mean **19.02s**, n=8, 3s polling interval).
 
 ---
 

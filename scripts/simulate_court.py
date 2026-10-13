@@ -6,9 +6,13 @@ import sys
 import os
 import json
 
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'tests')))
+import genlayer_stub  # noqa: F401
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'contracts')))
+import GuardrailCourt
 
-from guardrail_helpers import parse_model_verdict, velocity_guard
+parse_model_verdict = GuardrailCourt._parse_model_verdict
+velocity_guard = GuardrailCourt._velocity_guard
 
 
 def run_demo():
@@ -27,7 +31,7 @@ def run_demo():
     print(f"\n[1] Registered Policy 1:")
     print(f"    Owner: {policy['owner']}")
     print(f"    Agent: {policy['agent']}")
-    print(f"    Velocity Cap (10 most recent same-category decisions): {policy['window_cap']}")
+    print(f"    Velocity Cap (scans policy_history_ids[:15], filters category, up to 10 matching items): {policy['window_cap']}")
     print(f"    Policy Text: {policy['text']}")
 
     history = []

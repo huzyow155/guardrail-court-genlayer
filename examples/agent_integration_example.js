@@ -1,67 +1,163 @@
-# Example: AI Agent Clearance Verification
-# Shows how an autonomous agent or executor queries GuardrailCourt before executing an action.
+// Example: AI Agent Clearance Verification
+// Shows how an autonomous agent or executor submits a request to GuardrailCourt,
+// validates the 3-condition consensus receipt, retrieves the decision record via
+// list_decisions (avoiding racy blind reliance on latest_decision_id), and checks is_cleared.
+
+const dns = require('dns');
+dns.setDefaultResultOrder('ipv4first');
 
 const { createClient, chains, createAccount } = require('genlayer-js');
 
-async function agentWorkflowExample() {
-  const client = createClient({
+const GUARDRAIL_COURT_ADDRESS = '0x6C553Ba27a768D71b570a106D9D2e13553b4103c';
+
+function isReceiptSuccessful(receipt) {
+  const statusOk =
+    receipt.status_name === 'ACCEPTED' || receipt.status_name === 'FINALIZED';
+  const resultOk = receipt.result_name === 'MAJORITY_AGREE';
+  const leaderOk =
+    receipt.consensus_data?.leader_receipt?.[0]?.execution_result === 'SUCCESS';
+  return Boolean(statusOk && resultOk && leaderOk);
+}
+
+async function agentWorkflowExample({ dryRunReadOnly = false } = {}) {
+  const ownerAccount = createAccount();
+  const agentAccount = createAccount();
+
+  const ownerClient = createClient({
     chain: chains.studionet,
-    account: createAccount(), // or loaded agent wallet
+    account: ownerAccount,
   });
 
-  const GUARDRAIL_COURT_ADDRESS = "0x6C553Ba27a768D71b570a106D9D2e13553b4103c";
-  const POLICY_ID = "1";
+  const agentClient = createClient({
+    chain: chains.studionet,
+    account: agentAccount,
+  });
 
-  console.log("1. Agent requesting clearance for purchase...");
-  const requestTx = await client.writeContract({
+  if (dryRunReadOnly) {
+    console.log('=== DRY-RUN READ VERIFICATION AGAINST STUDIONET ===');
+    const decisionsJson = await agentClient.readContract({
+      address: GUARDRAIL_COURT_ADDRESS,
+      functionName: 'list_decisions',
+      args: ['1', 5],
+    });
+    const decisions = JSON.parse(decisionsJson);
+    const targetDecision = decisions.find((d) => d.id === '1') || decisions[0];
+    console.log('Fetched Decision from list_decisions("1", 5):', targetDecision);
+
+    const cleared = await agentClient.readContract({
+      address: GUARDRAIL_COURT_ADDRESS,
+      functionName: 'is_cleared',
+      args: [targetDecision.id],
+    });
+    console.log(`is_cleared("${targetDecision.id}"):`, cleared);
+    return { targetDecision, cleared };
+  }
+
+  console.log('1. Owner creating a dedicated policy for agent...');
+  const createTx = await ownerClient.writeContract({
     address: GUARDRAIL_COURT_ADDRESS,
-    functionName: 'request_action',
+    functionName: 'create_policy',
     args: [
-      POLICY_ID,
-      "dev_tools",
-      "45",
-      "Annual domain renewal for api.myservice.io via DNS registrar"
+      agentAccount.address,
+      'The agent may purchase developer tools and cloud renewals up to 100. No gifts.',
+      '100',
+      '400',
     ],
   });
-  console.log("Action request tx submitted:", requestTx);
+  const createReceipt = await ownerClient.waitForTransactionReceipt({
+    hash: createTx,
+    retries: 60,
+    interval: 3000,
+  });
+  if (!isReceiptSuccessful(createReceipt)) {
+    throw new Error('Policy creation failed 3-condition receipt check');
+  }
 
-  const receipt = await client.waitForTransactionReceipt({
+  const policies = JSON.parse(
+    await ownerClient.readContract({
+      address: GUARDRAIL_COURT_ADDRESS,
+      functionName: 'list_policies_by_owner',
+      args: [ownerAccount.address, 5],
+    })
+  );
+  const policyId = policies[0].id;
+  console.log('Created Policy ID:', policyId);
+
+  // (a) Call request_action
+  const actionCategory = 'dev_tools';
+  const actionAmount = '45';
+  const actionDesc = 'Annual domain renewal for api.myservice.io via DNS registrar';
+  console.log('2. Agent calling request_action...');
+  const requestTx = await agentClient.writeContract({
+    address: GUARDRAIL_COURT_ADDRESS,
+    functionName: 'request_action',
+    args: [policyId, actionCategory, actionAmount, actionDesc],
+  });
+  console.log('request_action tx hash:', requestTx);
+
+  // (b) Validate receipt using the strict 3-condition rule
+  const receipt = await agentClient.waitForTransactionReceipt({
     hash: requestTx,
     retries: 120,
     interval: 3000,
   });
-  console.log("Consensus status:", receipt.status_name, receipt.result_name);
+  console.log(
+    'Receipt 3-condition check:',
+    {
+      status_name: receipt.status_name,
+      result_name: receipt.result_name,
+      execution_result: receipt.consensus_data?.leader_receipt?.[0]?.execution_result,
+      passed: isReceiptSuccessful(receipt),
+    }
+  );
+  if (!isReceiptSuccessful(receipt)) {
+    throw new Error('request_action transaction did not satisfy 3-condition receipt rule');
+  }
 
-  // Read latest decision ID
-  const latestId = await client.readContract({
-    address: GUARDRAIL_COURT_ADDRESS,
-    functionName: 'latest_decision_id',
-    args: [POLICY_ID],
-  });
-  console.log("Decision ID assigned:", latestId);
+  // (c) Retrieve decision ID from list_decisions by matching request fields
+  // (Note: latest_decision_id can be racy if multiple requests are submitted concurrently under the same policy)
+  const recentDecisions = JSON.parse(
+    await agentClient.readContract({
+      address: GUARDRAIL_COURT_ADDRESS,
+      functionName: 'list_decisions',
+      args: [policyId, 10],
+    })
+  );
+  const matchedDecision = recentDecisions.find(
+    (d) =>
+      d.category === actionCategory &&
+      d.amount === actionAmount &&
+      d.description === actionDesc
+  );
+  if (!matchedDecision) {
+    throw new Error('Could not locate matching decision in list_decisions');
+  }
+  const decisionId = matchedDecision.id;
+  console.log('Matched Decision ID from list_decisions:', decisionId, matchedDecision);
 
-  // Check if cleared
-  const isCleared = await client.readContract({
+  // (d) Call is_cleared(decisionId) AND verify decision fields match the action before executing
+  const isCleared = await agentClient.readContract({
     address: GUARDRAIL_COURT_ADDRESS,
     functionName: 'is_cleared',
-    args: [latestId],
+    args: [decisionId],
   });
-  console.log("is_cleared check:", isCleared);
+  console.log(`is_cleared("${decisionId}"):`, isCleared);
 
-  if (isCleared) {
-    console.log("Action APPROVED: Proceeding with execution of task.");
+  if (isCleared && matchedDecision.status === 'CLEARED') {
+    console.log('Action CLEARED: Executor verified decision parameters and may proceed.');
   } else {
-    const decision = JSON.parse(await client.readContract({
-      address: GUARDRAIL_COURT_ADDRESS,
-      functionName: 'get_decision',
-      args: [latestId],
-    }));
-    console.log(`Action NOT cleared. Status: ${decision.status}, Verdict: ${decision.verdict}`);
+    console.log(
+      `Action NOT cleared. Status: ${matchedDecision.status}, Verdict: ${matchedDecision.verdict}`
+    );
   }
 }
 
 if (require.main === module) {
-  agentWorkflowExample().catch(console.error);
+  const dryRun = process.argv.includes('--dry-run');
+  agentWorkflowExample({ dryRunReadOnly: dryRun }).catch((err) => {
+    console.error(err);
+    process.exit(1);
+  });
 }
 
-module.exports = { agentWorkflowExample };
+module.exports = { agentWorkflowExample, isReceiptSuccessful };

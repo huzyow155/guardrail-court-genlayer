@@ -12,10 +12,10 @@ This document identifies prior art across existing guardrail frameworks, determi
 Searches conducted across GitHub repositories and developer registries:
 1. `gh search repos "agent policy genlayer"` -> 0 matching repositories found.
 2. `gh search repos "agent guardrail genlayer"` -> 0 matching repositories found.
-3. `gh search repos "genlayer"` -> Found official GenLayer protocol tools (`genlayer-studio`, `genlayer-cli`, `genlayer-js`, `genlayer-py`) and application prototypes (e.g., `proofworks-genlayer` bounty escrow, `genlayer-living-organism`). None implement an advisory agent guardrail court or multi-validator policy gate.
+3. `gh search repos "genlayer"` -> Found official GenLayer protocol tools (`genlayer-studio`, `genlayer-cli`, `genlayer-js`, `genlayer-py`) and application prototypes (e.g., `proofworks-genlayer` bounty escrow, `genlayer-living-organism`). Within the repositories returned by these queries on 2026-10-11, none implemented an advisory agent guardrail court or multi-validator policy gate (this reflects our search results on 2026-10-11, not an absolute claim across all sources).
 4. `gh search repos "guardrail"` -> Found off-chain LLM guardrail libraries (`NVIDIA-NeMo/Guardrails`, `guardrails-ai/guardrails`, `Portkey-AI/gateway`, `openai/openai-guardrails-python`).
 
-Conclusion regarding GenLayer prior art: **We found no prior intelligent contract or community project implementing an agent guardrail gate or clearance court on GenLayer Studionet.**
+Conclusion regarding GenLayer prior art: **Within the GitHub search queries recorded on 2026-10-11, we did not find a prior intelligent contract or community project implementing an agent guardrail gate or clearance court on GenLayer Studionet (this is a report of those specific query results, not an absolute claim).**
 
 ---
 
@@ -87,7 +87,7 @@ Guardrail Court operates independently as an intelligent contract on GenLayer St
 - **Natural-Language Policy Evaluation**: Evaluates proposed actions against natural-language policy text defined by human owners.
 - **Multi-Validator Equivalence Consensus**: Runs validator consensus on an explicit 3-way verdict enum (`ALLOW`, `DENY`, or `ESCALATE`) via `gl.eq_principle.strict_eq`.
 - **Pre-LLM Numeric Guards**: Executes zero-inference numeric checks (`HARD_LIMIT` against `max_amount`, and per-category `VELOCITY` sum against `window_cap`) before triggering validator LLMs.
-- **Fail-Closed Escalation**: Unparseable responses or subjective ambiguity fail closed to `ESCALATE`, routing to the policy owner for manual resolution.
+- **Escalation Fallback**: Outputs that do not parse as valid JSON generally default to `ESCALATE`, routing to the policy owner for manual resolution; **HOWEVER**, the fallback branch matches the substring `"VERDICT": "ALLOW"` (or `'VERDICT': 'ALLOW'`) in upper-cased prose and returns `ALLOW` (see `test_parser_fallback_documents_known_fail_open_path` and `docs/LIMITATIONS.md` #1). The deployed contract is immutable.
 - **Public Decision Ledger**: Records decisions in contract state, exposing a synchronous view query `court.view().is_cleared(decision_id)` for downstream smart contracts.
 - **Advisory Role**: Does not hold private keys, custody tokens, or execute financial transactions directly.
 
@@ -101,6 +101,6 @@ Guardrail Court operates independently as an intelligent contract on GenLayer St
 3. **Escalation / Human Approval**: Routing ambiguous or high-risk actions to human operators exists in enterprise incident and approval workflows (demonstrated by [PagerDuty](https://www.pagerduty.com/)).
 
 ### What We Found No Precedent For (Within Queried Scope)
-*Search tools used: `gh search repos` and GitHub search API, executed on 2026-10-11 across queries `agent policy genlayer`, `agent guardrail genlayer`, and `genlayer`. Dựa trên các truy vấn GitHub đã nêu, thực hiện ngày 2026-10-11, không phải khẳng định không có dự án tương tự trên các nguồn khác.*
+*Search tools used: `gh search repos` and GitHub search API, executed on 2026-10-11 across queries `agent policy genlayer`, `agent guardrail genlayer`, and `genlayer`. Based on the stated GitHub queries executed on 2026-10-11; this is not an absolute assertion that no similar project exists across other sources.*
 1. **Multi-Validator Equivalence Consensus on Natural Language Agent Policies**: Evaluating an autonomous agent's qualitative action description against natural-language policy guidelines using GenLayer validator consensus (`gl.eq_principle.strict_eq`), producing an on-chain verdict without external oracles.
-2. **Hybrid Guard Architecture on GenVM**: Combining zero-inference deterministic pre-guards (`HARD_LIMIT` and per-category `VELOCITY` calculations) with fail-closed LLM equivalence consensus (`ALLOW`, `DENY`, or `ESCALATE`) in a single smart contract.
+2. **Hybrid Guard Architecture on GenVM**: Combining zero-inference deterministic pre-guards (`HARD_LIMIT` and per-category `VELOCITY` calculations) with LLM equivalence consensus (`ALLOW`, `DENY`, or `ESCALATE` with escalation fallback except for the documented `"VERDICT": "ALLOW"` prose substring path in `docs/LIMITATIONS.md` #1) in a single smart contract.

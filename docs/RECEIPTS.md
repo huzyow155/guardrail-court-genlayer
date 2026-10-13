@@ -14,7 +14,7 @@ Generated automatically from `scripts/deploy/receipts_fresh.json` (RPC timestamp
 
 ## Complete Receipts Matrix (29 Transactions)
 
-| Bước | Transaction Hash | `status_name` | `result_name` | Leader Result | Recipient Contract | Result / Lỗi Giải Mã |
+| Step | Transaction Hash | `status_name` | `result_name` | Leader Result | Recipient Contract | Result / Decoded Error |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
 | Probe Deploy | `0xef76f606fb197b9366042827e4c509fb44d126d71c86d7690fa8ebc2b5061368` | `FINALIZED` | `MAJORITY_AGREE` | `SUCCESS` | `0xCafd1A568d5A55eb7E1135F0Fe31137114D5Fe42` | `SUCCESS` |
 | Probe Consensus | `0xcb6562321804ccc0e724a33e2ef6e6bd6549cc7e425f659884935556777eda6e` | `FINALIZED` | `MAJORITY_AGREE` | `SUCCESS` | `0xCafd1A568d5A55eb7E1135F0Fe31137114D5Fe42` | `SUCCESS` |
