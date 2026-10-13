@@ -60,11 +60,11 @@
 
 ---
 
-## 6. Advisory `is_cleared` Flag & Consumer Trust Model
+## 6. Advisory `is_cleared` Flag & Consumer Trust Model (`GuardedVault`)
 - **Code Locations**: `contracts/GuardrailCourt.py`, lines 488-495 (`is_cleared`) and `examples/consumer/GuardedVault.py`, lines 19-46 (`execute`).
 - **Behavior**:
-  - `GuardrailCourt.is_cleared(decision_id)` returns a boolean (`d.get("status") == "CLEARED"`) for a given `decision_id`. It does **not** bind or verify caller identity, policy ID, category, amount, or target recipient.
-  - In the demo consumer `GuardedVault.execute(decision_id, note)`, any caller can trigger execution for any cleared `decision_id` that has not yet been marked in `executed_decisions`.
+  - `GuardrailCourt.is_cleared(decision_id)` returns a boolean (`d.get("status") == "CLEARED"`) for a given `decision_id`. It is an advisory flag only and does **not** bind or verify caller identity, policy ID, category, amount, or target action/recipient.
+  - `GuardedVault.execute(decision_id, note)` **does** block repeat execution of the same `decision_id` via `executed_decisions` (`if did in self.executed_decisions: raise gl.vm.UserError("decision has already been executed")`, lines 24-25 and 44), **but** it does **not** bind `decision_id` to any specific amount, category, or action parameters, and **any address** can call `execute(decision_id, note)`.
 - **Trust Model Requirement**: Production downstream executors (vaults, paymasters, Safe modules) must not rely on `is_cleared(decision_id)` alone; they must also call `get_decision(decision_id)` and verify that `policy_id`, `category`, `amount`, and action parameters match the transaction being executed, and enforce caller authorization.
 
 ---

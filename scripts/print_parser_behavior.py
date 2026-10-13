@@ -30,7 +30,7 @@ test_cases = [
     ("Valid JSON ESCALATE", '{"verdict": "ESCALATE"}'),
 ]
 
-print("=== REAL CONTRACT FAIL-CLOSED PARSING TEST (_parse_model_verdict) ===")
+print("=== REAL CONTRACT PARSER BEHAVIOR TEST (_parse_model_verdict) ===")
 for label, tc in test_cases:
     res = GuardrailCourt._parse_model_verdict(tc)
     # Determine final state based on lines 302-308:

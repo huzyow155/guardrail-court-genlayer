@@ -58,7 +58,12 @@ class TestLayer1Pure(unittest.TestCase):
         self.assertFalse(is_valid_category(""))  # empty
         self.assertFalse(is_valid_category("a" * 31))  # too long
 
-    def test_fail_closed_parsing(self):
+    def test_parser_garbage_and_unknown_values_escalate(self):
+        """
+        Verifies _parse_model_verdict behavior on valid JSON labels, markdown fences,
+        garbage strings, and unknown verdict strings (which escalate), while noting
+        the fallback substring match for '"VERDICT": "ALLOW"'.
+        """
         # Clean labels pass
         self.assertEqual(parse_model_verdict('{"verdict": "ALLOW"}'), "ALLOW")
         self.assertEqual(parse_model_verdict('{"verdict": "DENY"}'), "DENY")

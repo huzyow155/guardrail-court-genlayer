@@ -13,7 +13,7 @@ async function main() {
     account: account,
   });
 
-  const codePath = path.join(__dirname, '../../contracts/Probe.py');
+  const codePath = path.join(__dirname, '../../archive/Probe.py');
   const code = fs.readFileSync(codePath, 'utf8');
 
   console.log("Deploying Probe contract to Studionet...");

@@ -1,7 +1,7 @@
 # Runtime Probe Findings (Milestone 0)
 
 ## Overview
-A dedicated probe contract (`Probe.py`) was deployed and executed live on GenLayer Studionet (Chain ID 61999) to verify VM capabilities, consensus primitives, execution latency, and environment expectations prior to implementing the core contract.
+A dedicated probe contract (`Probe.py`, now in `archive/Probe.py`) was deployed and executed live on GenLayer Studionet (Chain ID 61999) to verify VM capabilities, consensus primitives, execution latency, and environment expectations prior to implementing the core contract.
 
 - **Probe Contract Address**: `0xCafd1A568d5A55eb7E1135F0Fe31137114D5Fe42`
 - **Deploy Transaction**: `0xef76f606fb197b9366042827e4c509fb44d126d71c86d7690fa8ebc2b5061368`

@@ -21,7 +21,7 @@ async function main() {
     account: agent,
   });
 
-  const codePath = path.join(__dirname, '../../contracts/GuardrailCourtCore.py');
+  const codePath = path.join(__dirname, '../../archive/GuardrailCourtCore.py');
   const code = fs.readFileSync(codePath, 'utf8');
 
   console.log("Deploying GuardrailCourtCore contract to Studionet...");
