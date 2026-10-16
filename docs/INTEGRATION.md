@@ -146,7 +146,7 @@ All user errors are raised as `gl.vm.UserError` with distinct messages:
 When verifying GenLayer transactions, a transaction is only successful when **all three** conditions hold:
 ```javascript
 const isSuccess =
-  (receipt.status_name === 'ACCEPTED' || receipt.status_name === 'FINALIZED') &&
+  receipt.status_name === 'ACCEPTED' &&
   receipt.result_name === 'MAJORITY_AGREE' &&
   receipt.consensus_data?.leader_receipt?.[0]?.execution_result === 'SUCCESS';
 ```

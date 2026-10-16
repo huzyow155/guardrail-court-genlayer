@@ -88,4 +88,9 @@
 ## 9. Policy Statistics State Mechanics & Transaction Statuses
 - `get_policy_stats` dynamically tallies counts across the decision IDs currently stored in `by_policy[policy_id]` (capped at 60).
 - When the owner calls `resolve_escalation(decision_id, "ALLOW")`, the decision's `verdict` updates to `"ALLOW"` and `status` updates to `"CLEARED"` (as seen in Policy 1 where Decision 3 moved from `PENDING_OWNER` to `CLEARED`, resulting in `cleared_count: 6` and `pending_owner_count: 1`), while `source` retains its original detection source (`"JUDGE"` or `"VELOCITY"`).
-- On GenLayer Studionet, transaction receipts report `status_name: "ACCEPTED"` immediately after consensus and `"FINALIZED"` in subsequent blocks.
+- On GenLayer Studionet, transaction receipts report `status_name: "ACCEPTED"` immediately after consensus confirmation.
+
+---
+
+## 10. Guardrail Court V2 Calldata Limitation
+- `calldata_hash` is a string supplied by the caller; the contract binds it into `action_hash` but cannot verify it equals the hash of any real calldata, and the validators do not decode calldata. The consumer must hash the calldata it will actually execute and pass that same value.
