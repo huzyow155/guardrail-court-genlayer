@@ -43,12 +43,13 @@ This document catalogues every user-facing error condition raised by **Guardrail
 
 ### Consumer Guard Errors (`GuardedVaultV2`)
 - `"decision has already been executed"`: Raised if `execute_action` is called with a `decision_id` that was already executed by the vault.
-- `"clearance does not match this action"`: Raised if `court.view().is_cleared_for(...)` returns `False` due to invalid decision, uncleared status, or mismatch in policy_id, category, recipient, asset, amount, or calldata_hash.
+- `"clearance does not match this action"`: Raised if `court.view().is_cleared_for(...)` returns `False` due to invalid decision, uncleared status, paused policy, missing policy, or mismatch in policy_id, category, recipient, asset, amount, or calldata_hash.
 - `"execution not found"`: Raised if querying execution history for an unexecuted `decision_id`.
 
 ### Parser Fail-Closed Rules and Boundaries (`_parse_verdict`)
 - **2000-character parser cap**: If `len(raw_output) > 2000`, the parser immediately defaults to `"ESCALATE"` to reject oversized or noise payloads.
 - **3-token contradiction rule**: If the raw output contains 2 or more distinct tokens from the set `{"allow", "deny", "escalate"}` (case-insensitive), it immediately fails closed to `"ESCALATE"`.
+- **Policy Pause Circuit-Breaker**: `is_cleared_for` returns `False` whenever `policy.paused` is `True` or the policy record does not exist, immediately halting all consumer executions under the paused policy.
 - **Calldata Limitation**: `calldata_hash` is a string supplied by the caller; the contract binds it into `action_hash` but cannot verify it equals the hash of any real calldata, and the validators do not decode calldata. The consumer must hash the calldata it will actually execute and pass that same value.
 
 ---

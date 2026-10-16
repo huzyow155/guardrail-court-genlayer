@@ -32,7 +32,7 @@ Guardrail Court V2 provides a comprehensive, ground-up upgrade resolving both vu
 Guardrail Court V2 enforces strict invariants within its execution boundary. To prevent downstream false assumptions, its exact guarantees and non-guarantees are defined below:
 
 ### What Guardrail Court V2 Binds & Enforces:
-1. **Parameter Integrity**: Clearance is tied 1-to-1 to the exact tuple `(policy_id, category, recipient, asset, amount, calldata_hash)`. Any deviation in downstream execution causes `is_cleared_for` to return `False`.
+1. **Parameter Integrity & Pause Circuit-Breaker**: Clearance is tied 1-to-1 to the exact tuple `(policy_id, category, recipient, asset, amount, calldata_hash)`. Any deviation in downstream execution causes `is_cleared_for` to return `False`. Furthermore, if the decision's policy is paused (`policy.paused == True`) or missing, `is_cleared_for` returns `False`, ensuring the owner kill switch immediately halts all pending clearances across all consumers.
 2. **Deterministic Pre-LLM Filters**:
    - `HARD_LIMIT`: Requests exceeding `max_amount` are immediately rejected with `DENIED` status.
    - `RECIPIENT_GUARD`: Requests with recipients not in `allowed_recipients` are immediately rejected with `DENIED` status.

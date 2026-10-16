@@ -94,3 +94,13 @@
 
 ## 10. Guardrail Court V2 Calldata Limitation
 - `calldata_hash` is a string supplied by the caller; the contract binds it into `action_hash` but cannot verify it equals the hash of any real calldata, and the validators do not decode calldata. The consumer must hash the calldata it will actually execute and pass that same value.
+
+---
+
+## 11. Absence of Clearance Expiry
+- Clearances have no expiry because the contract has no clock: a cleared decision stays valid until executed or the policy is paused.
+
+---
+
+## 12. Consumer Authorization Scope
+- `GuardedVaultV2.execute` is callable by any address (it enforces parameter match and single use, not who calls; a real consumer must add its own authorization).
