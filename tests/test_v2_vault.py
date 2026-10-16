@@ -136,6 +136,19 @@ class TestV2Vault(unittest.TestCase):
             self.vault.execute(did_escalated, self.pid, category, self.recipient, asset, amount, calldata_hash)
         self.assertIn("clearance does not match this action", str(cm.exception))
 
+        # 3. Cleared decision on a paused policy raises "clearance does not match this action"
+        gl.nondet.prompt_result = '{"verdict": "ALLOW"}'
+        did_cleared = self.court.request_action(self.pid, category, self.recipient, asset, amount, calldata_hash, "Safe action")
+        gl.message.sender_address.as_hex = self.owner
+        self.court.set_paused(self.pid, True)
+        gl.message.sender_address.as_hex = self.agent
+        with self.assertRaises(gl.vm.UserError) as cm:
+            self.vault.execute(did_cleared, self.pid, category, self.recipient, asset, amount, calldata_hash)
+        self.assertIn("clearance does not match this action", str(cm.exception))
+        # restore unpaused
+        gl.message.sender_address.as_hex = self.owner
+        self.court.set_paused(self.pid, False)
+
     def test_vault_unexecuted_query_reverts(self):
         with self.assertRaises(gl.vm.UserError) as cm:
             self.vault.get_execution("nonexistent_decision")

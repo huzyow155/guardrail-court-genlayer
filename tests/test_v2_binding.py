@@ -145,6 +145,26 @@ class TestV2Binding(unittest.TestCase):
         self.court.resolve_escalation(did_pending2, "ALLOW")
         self.assertTrue(self.court.is_cleared_for(did_pending2, self.pid, "transfer", self.recipient, "USDC", "100", calldata_hash))
 
+    def test_is_cleared_for_paused_policy(self):
+        gl.message.sender_address.as_hex = self.agent
+        category = "transfer"
+        asset = "USDC"
+        amount = "100"
+        calldata_hash = "beef" * 16
+        did = self.court.request_action(self.pid, category, self.recipient, asset, amount, calldata_hash, "Testing pause toggle")
+
+        # 1. Active policy: clearance returns True
+        self.assertTrue(self.court.is_cleared_for(did, self.pid, category, self.recipient, asset, amount, calldata_hash))
+
+        # 2. Pause policy: clearance returns False
+        gl.message.sender_address.as_hex = self.owner
+        self.court.set_paused(self.pid, True)
+        self.assertFalse(self.court.is_cleared_for(did, self.pid, category, self.recipient, asset, amount, calldata_hash))
+
+        # 3. Unpause policy: clearance returns True again
+        self.court.set_paused(self.pid, False)
+        self.assertTrue(self.court.is_cleared_for(did, self.pid, category, self.recipient, asset, amount, calldata_hash))
+
 
 if __name__ == "__main__":
     unittest.main()
