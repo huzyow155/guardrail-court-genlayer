@@ -20,7 +20,7 @@
     "execution_result": "SUCCESS",
     "error": null
   },
-  "velocity_trip": {
+  "slice_4_model_escalation": {
     "tx": {
       "tx_hash": "0x35578eb043ce881a5a503a919167339c689c6ab55ff06a30dbca47d74515cd35",
       "status_name": "ACCEPTED",

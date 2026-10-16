@@ -1,0 +1,171 @@
+{
+  "policy_3_creation": {
+    "tx_hash": "0x5d4f3aca899dfe454c7ea6b7f91a3e776ffdaf19e4cb1d74d6369eef6e3b8deb",
+    "status_name": "ACCEPTED",
+    "result_name": "MAJORITY_AGREE",
+    "execution_result": "SUCCESS",
+    "error": null
+  },
+  "step2_tries": [
+    {
+      "try_num": 1,
+      "tx": {
+        "tx_hash": "0x017531e60b07438baf664d5354e0cb92f7a35df40878b661530141b39a48e4ec",
+        "status_name": "ACCEPTED",
+        "result_name": "MAJORITY_AGREE",
+        "execution_result": "SUCCESS",
+        "error": null
+      },
+      "durSec": 15.2813728,
+      "decision": {
+        "action_hash": "c2c7cc7a985f827b363c691fa0a1564a88ddf8196a9f8f57f6d8d74c3928f731",
+        "amount": "60",
+        "asset": "USDC",
+        "calldata_hash": "0f631df300bb8cf6816263867d5e305a5d1be4aad7a234b9c900389f55ce3594",
+        "category": "server_ops",
+        "id": "22",
+        "justification": "monthly server hosting invoice",
+        "policy_id": "3",
+        "recipient": "0x1111111111111111111111111111111111111111",
+        "resolved_by_owner": false,
+        "schema_version": "2",
+        "seq": "1",
+        "source": "JUDGE",
+        "status": "CLEARED",
+        "verdict": "ALLOW"
+      }
+    }
+  ],
+  "velocity_proven_live": true,
+  "step3_velocity_trip": {
+    "tx": {
+      "tx_hash": "0xfcc8e570cce2abdeb0583f0fdd9a569f1169dbab0af3e106b749559fb8fc9d80",
+      "status_name": "ACCEPTED",
+      "result_name": "MAJORITY_AGREE",
+      "execution_result": "SUCCESS",
+      "error": null
+    },
+    "durSec": 8.751023700000001,
+    "decision": {
+      "action_hash": "1e416bb2b86f1e8a2304784011164b457994c349559f9a1c293ade1b9874d63f",
+      "amount": "60",
+      "asset": "USDC",
+      "calldata_hash": "c2cec8ad93c1abe71b5e973f3af49f303af97bd4f5d2c16e9511e1161e4a51d9",
+      "category": "server_ops",
+      "id": "23",
+      "justification": "monthly server hosting invoice slice 2",
+      "policy_id": "3",
+      "recipient": "0x1111111111111111111111111111111111111111",
+      "resolved_by_owner": false,
+      "schema_version": "2",
+      "seq": "2",
+      "source": "VELOCITY",
+      "status": "PENDING_OWNER",
+      "verdict": "ESCALATE"
+    },
+    "is_cleared_for_before": false
+  },
+  "step4_denied_check": {
+    "hard_limit": {
+      "tx": {
+        "tx_hash": "0x295aba0f15ae1719023bf235427c417593e122a81e947517c96a171cf9b5026c",
+        "status_name": "ACCEPTED",
+        "result_name": "MAJORITY_AGREE",
+        "execution_result": "SUCCESS",
+        "error": null
+      },
+      "durSec": 8.893330499999996,
+      "decision": {
+        "action_hash": "168bf8a1a05711872190341f7d30e14094dbe66b48188fd9cc8c7c67a49173de",
+        "amount": "61",
+        "asset": "USDC",
+        "calldata_hash": "96b9678e5dec8a00d3ba783489f990aa353cdcbb7ef277f0f7c08cb32af5722a",
+        "category": "server_ops",
+        "id": "24",
+        "justification": "Over limit server maintenance",
+        "policy_id": "3",
+        "recipient": "0x1111111111111111111111111111111111111111",
+        "resolved_by_owner": false,
+        "schema_version": "2",
+        "seq": "3",
+        "source": "HARD_LIMIT",
+        "status": "DENIED",
+        "verdict": "DENY"
+      }
+    },
+    "within_cap_40": {
+      "tx": {
+        "tx_hash": "0x587104cc1ddbb7fc20d769bbef25a4b341bd5e55c2e398b2d69c3c04ee189802",
+        "status_name": "ACCEPTED",
+        "result_name": "MAJORITY_AGREE",
+        "execution_result": "SUCCESS",
+        "error": null
+      },
+      "durSec": 21.817950300000003,
+      "decision": {
+        "action_hash": "1251497fb512cae786857962902db2ada04c7ad476d588a390b462fdf6e9af45",
+        "amount": "40",
+        "asset": "USDC",
+        "calldata_hash": "8fe897b054ce1aa693bb348520e4bf3f61d493759251a75b5aed7576fb41b287",
+        "category": "server_ops",
+        "id": "25",
+        "justification": "monthly server hosting invoice part 2",
+        "policy_id": "3",
+        "recipient": "0x1111111111111111111111111111111111111111",
+        "resolved_by_owner": false,
+        "schema_version": "2",
+        "seq": "4",
+        "source": "JUDGE",
+        "status": "CLEARED",
+        "verdict": "ALLOW"
+      }
+    }
+  },
+  "step5_owner_resolve": {
+    "tx": {
+      "tx_hash": "0x27915c11818e610a32085fa953f8fd6944971af12e48ecfd7af368fa82f3f7eb",
+      "status_name": "ACCEPTED",
+      "result_name": "MAJORITY_AGREE",
+      "execution_result": "SUCCESS",
+      "error": null
+    },
+    "durSec": 5.269555599999992,
+    "decision_post": {
+      "action_hash": "1e416bb2b86f1e8a2304784011164b457994c349559f9a1c293ade1b9874d63f",
+      "amount": "60",
+      "asset": "USDC",
+      "calldata_hash": "c2cec8ad93c1abe71b5e973f3af49f303af97bd4f5d2c16e9511e1161e4a51d9",
+      "category": "server_ops",
+      "id": "23",
+      "justification": "monthly server hosting invoice slice 2",
+      "policy_id": "3",
+      "recipient": "0x1111111111111111111111111111111111111111",
+      "resolved_by_owner": true,
+      "schema_version": "2",
+      "seq": "2",
+      "source": "VELOCITY",
+      "status": "CLEARED",
+      "verdict": "ALLOW"
+    },
+    "is_cleared_for_after": true
+  },
+  "policy_3_final_stats": {
+    "cleared_count": 3,
+    "pending_owner_count": 0,
+    "policy_id": "3",
+    "schema_version": "2",
+    "sources": {
+      "ASSET_GUARD": 0,
+      "HARD_LIMIT": 1,
+      "JUDGE": 2,
+      "RECIPIENT_GUARD": 0,
+      "VELOCITY": 1
+    },
+    "total_decisions": 4,
+    "verdicts": {
+      "ALLOW": 3,
+      "DENY": 1,
+      "ESCALATE": 0
+    }
+  }
+}
