@@ -4,12 +4,28 @@
 
 ## Status: Preview
 
-**Contract Address**: [`0x6C553Ba27a768D71b570a106D9D2e13553b4103c`](https://explorer-studio.genlayer.com/address/0x6C553Ba27a768D71b570a106D9D2e13553b4103c)  
-**Network**: GenLayer Studionet (Chain ID: 61999)  
-**Deploy Transaction**: `0xe7a7ec9e6e1b1cf9f07696d251dc08118b7c865121551107850abb2938d81136`  
-**License**: MIT (c) 2026 Hyper
+### Guardrail Court V2 (Current)
+
+Guardrail Court V2 addresses reviewer feedback by binding clearance directly to action parameters, introducing deterministic whitelist guards, enforcing strict fail-closed JSON parsing, adding an emergency pause circuit-breaker, and capping pending escalation queues.
+
+- **GuardrailCourtV2 Address**: [`0xF5797dDB4ce419ec50351BF9B48D5C24D5330d7b`](https://explorer-studio.genlayer.com/address/0xF5797dDB4ce419ec50351BF9B48D5C24D5330d7b)
+  - **Deploy Transaction**: `0x9010b9b20c6b21e0e980ac896a9f28708a195c419b5c8eca9b05426b4defab1b`
+  - **Source SHA-256**: `94BDA609903A2ECC854269307E628E49869A36B466DAE7CD941553406E12F9F6`
+- **GuardedVaultV2 (Consumer) Address**: [`0xc0dF70EE8BEC7003EF6CCfb24590b4D559699b58`](https://explorer-studio.genlayer.com/address/0xc0dF70EE8BEC7003EF6CCfb24590b4D559699b58)
+  - **Deploy Transaction**: `0x7df07e95b5a20203845c23deb42e4e38724dc522b54be6b0101deb811ea1eb94`
+  - **Source SHA-256**: `7CB69D7745B0C9354ECA3D1D712EBF7099726298128C3C45E54F8C7CC2060366`
+- **Network**: GenLayer Studionet (Chain ID: 61999)
+- **License**: MIT (c) 2026 Hyper
+
+*(Historical V1 contract preserved unmodified at `0x6C553Ba27a768D71b570a106D9D2e13553b4103c`)*
 
 ---
+
+### V2 Documentation
+- [`docs/INTEGRATION_V2.md`](docs/INTEGRATION_V2.md): Complete V2 ABI, schemas, UserError catalog, latency table, and consumer integration.
+- [`docs/V2_VERIFICATION.md`](docs/V2_VERIFICATION.md): On-chain verification registry and raw test evidence for 12 cases.
+- [`docs/V2_DESIGN.md`](docs/V2_DESIGN.md): V2 architectural design and parameter-bound clearance protocol.
+- [`docs/V2_EXPECTED.md`](docs/V2_EXPECTED.md): Pre-registered expected outcomes matrix across 12 test scenarios.
 
 ## The Problem
 
@@ -96,8 +112,8 @@ Transactions executed and verified on GenLayer Studionet (see [`docs/VERIFICATIO
 ## How to Test
 
 ```bash
-# Run all 27 unit tests
-# Note: These 27 unit tests run contract code through a minimal genlayer stub on CPython,
+# Run all 51 unit tests
+# Note: These 51 unit tests run contract code through a minimal genlayer stub on CPython,
 # replacing strict_eq and exec_prompt with mocks, and do not exercise consensus or model behavior.
 python -m unittest discover tests
 

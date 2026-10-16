@@ -12,7 +12,7 @@ A dedicated probe contract (`Probe.py`, now in `archive/Probe.py`) was deployed 
 
 ## Probe Verification Matrix
 
-| Feature / Probe Addition | Expected Behavior | Live Studionet Result | Notes / Details |
+| Feature / Probe Addition | Expected Behavior | Studionet Preview Result | Notes / Details |
 | :--- | :--- | :--- | :--- |
 | **Sender Address Access** | `gl.message.sender_address.as_hex` | Verified | Returns standard `0x...` hex string. Consistent with address string. |
 | **Address Casing** | Hex casing stability | Verified | Always lower-case addresses in contract storage (`addr.lower()`) to ensure case-insensitive matching across callers. |
