@@ -584,6 +584,15 @@ class GuardrailCourtV2(gl.Contract):
         amount: str,
         calldata_hash: str,
     ) -> bool:
+        if policy_id not in self.policies:
+            return False
+        try:
+            p = json.loads(self.policies[policy_id])
+            if p.get("paused", False):
+                return False
+        except Exception:
+            return False
+
         if decision_id not in self.decisions:
             return False
         try:
