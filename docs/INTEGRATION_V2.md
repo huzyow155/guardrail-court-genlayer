@@ -192,13 +192,16 @@ The contract raises descriptive errors via `gl.vm.UserError`. Downstream integra
 
 ## 5. Measured On-Chain Latency Benchmarks
 
-Measured across live transactions on GenLayer Studionet (Chain ID 61999):
+Measured across transactions on GenLayer Studionet (Chain ID 61999) classified by actual execution mechanism:
 
-| Category | Description | Transactions | Min Latency | Mean Latency | Max Latency |
+| Category | Description | Transactions (n) | Min Latency | Mean Latency | Max Latency |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Admin Writes** | `create_policy`, `set_paused`, `resolve_escalation`, `execute` | 21 | 5.17s | 7.85s | 12.57s |
-| **Guard-Only Writes** | `HARD_LIMIT`, `RECIPIENT_GUARD`, `ASSET_GUARD`, `VELOCITY` | 16 | 5.37s | 28.86s | 104.66s |
-| **Judged Writes** | Validator consensus + non-deterministic model execution | 7 | 18.96s | 45.50s | 115.01s |
+| **Admin Writes** | `create_policy`, `set_paused`, `resolve_escalation`, `vault_execute` | 11 | 5.27s | 8.33s | 12.57s |
+| **Guard-Only Writes** | Deterministic smart-contract guards (`HARD_LIMIT`, `RECIPIENT_GUARD`, `ASSET_GUARD`, `VELOCITY`) | 5 | 8.75s | 9.06s | 9.56s |
+| **Reverted Validation Gates**| Precondition bounds checks reverting with `UserError` (e.g. queue cap, inputs) | 14 | 5.17s | 7.05s | 9.66s |
+| **Judged Writes** | Validator consensus + non-deterministic model execution | 20 | 15.12s | 38.79s | 115.01s |
+
+*Note on Studionet Latency*: Decentralized model consensus exhibits significant latency variance (ranging from 15.12s up to 115.01s) depending on validator rotation and model response times. Deterministic guards consistently short-circuit execution in ~8.8s to ~9.6s.
 
 ---
 

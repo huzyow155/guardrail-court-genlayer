@@ -24,6 +24,7 @@ Guardrail Court V2 addresses reviewer feedback by binding clearance directly to 
 ### V2 Documentation
 - [`docs/INTEGRATION_V2.md`](docs/INTEGRATION_V2.md): Complete V2 ABI, schemas, UserError catalog, latency table, and consumer integration.
 - [`docs/V2_VERIFICATION.md`](docs/V2_VERIFICATION.md): On-chain verification registry and raw test evidence for 12 cases.
+- [`docs/V2_ACTUAL.md`](docs/V2_ACTUAL.md): Empirical results vs pre-registered expectations matrix and key findings.
 - [`docs/V2_DESIGN.md`](docs/V2_DESIGN.md): V2 architectural design and parameter-bound clearance protocol.
 - [`docs/V2_EXPECTED.md`](docs/V2_EXPECTED.md): Pre-registered expected outcomes matrix across 12 test scenarios.
 

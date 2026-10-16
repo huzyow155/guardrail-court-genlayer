@@ -104,3 +104,10 @@
 
 ## 12. Consumer Authorization Scope
 - `GuardedVaultV2.execute` is callable by any address (it enforces parameter match and single use, not who calls; a real consumer must add its own authorization).
+
+---
+
+## 13. Conservative Model Escalation on Generic Justifications
+- Empirical execution on Studionet demonstrates that validator model consensus adopts a conservative stance towards sparse, repetitive, or generic justifications.
+- During test rounds, the model escalated 3 of the 4 in-policy-looking "server capacity scaling" requests under Policy 1, and escalated 10 of 11 requests under Policy 2.
+- Consequence: Human policy owners will observe an active escalation queue if autonomous agents submit generic justifications without concrete, verifiable context (such as explicit vendor names, specific service tiers, or invoice identifiers).
