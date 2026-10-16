@@ -2,55 +2,9 @@ import sys
 import types
 import unittest
 
-# Build lightweight stub for genlayer
-genlayer_mod = types.ModuleType("genlayer")
-
-class MockTreeMap:
-    def __class_getitem__(cls, item):
-        return cls
-
-class MockContract:
-    pass
-
-class MockVM:
-    class UserError(Exception):
-        pass
-
-class MockPublic:
-    @staticmethod
-    def write(fn):
-        return fn
-    @staticmethod
-    def view(fn):
-        return fn
-
-class MockNondet:
-    @staticmethod
-    def exec_prompt(prompt):
-        return '{"verdict": "ALLOW"}'
-
-class MockEqPrinciple:
-    @staticmethod
-    def strict_eq(fn):
-        return fn()
-
-class MockMessage:
-    class sender_address:
-        as_hex = "0x1b1e4a79e286434c428a576e6d91bc2220661cf3"
-
-class MockGL:
-    Contract = MockContract
-    vm = MockVM
-    public = MockPublic
-    nondet = MockNondet
-    eq_principle = MockEqPrinciple
-    message = MockMessage
-
-genlayer_mod.gl = MockGL
-genlayer_mod.TreeMap = MockTreeMap
-genlayer_mod.Address = str
-
-sys.modules["genlayer"] = genlayer_mod
+import os
+sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
+import genlayer_stub
 
 # Now import the REAL contracts/GuardrailCourt.py
 sys.path.insert(0, "contracts")
