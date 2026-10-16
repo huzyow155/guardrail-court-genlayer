@@ -1,0 +1,32 @@
+{
+  "pause_tx": {
+    "tx_hash": "0xd25e8165be376b53a01209eea0a7162e9e82aa6275fca5d507abc9f57d1ae0ae",
+    "status_name": "ACCEPTED",
+    "result_name": "MAJORITY_AGREE",
+    "execution_result": "SUCCESS",
+    "error": null
+  },
+  "agent_action_paused": {
+    "tx_hash": "0x261c5eb040f5d97015f14d57c1ed101e50bf8218ae561a9c29a11baa94d61fba",
+    "status_name": "ACCEPTED",
+    "result_name": "MAJORITY_AGREE",
+    "execution_result": "ERROR",
+    "error": "\"policy is paused\""
+  },
+  "cleared_check_paused": false,
+  "unpause_tx": {
+    "tx_hash": "0xaad460f796af15dbbaf7474a6e217b2fdb615ce57b56d5e82f30427e0d1321f8",
+    "status_name": "ACCEPTED",
+    "result_name": "MAJORITY_AGREE",
+    "execution_result": "SUCCESS",
+    "error": null
+  },
+  "cleared_check_unpaused": true,
+  "non_owner_pause": {
+    "tx_hash": "0x3251dbe02381196052ff6d687831acf0bfb4108197fd4c3e90adf84a42d98f7b",
+    "status_name": "ACCEPTED",
+    "result_name": "MAJORITY_AGREE",
+    "execution_result": "ERROR",
+    "error": "\"only the policy owner may pause or unpause\""
+  }
+}

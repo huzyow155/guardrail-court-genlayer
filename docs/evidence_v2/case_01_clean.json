@@ -1,0 +1,36 @@
+{
+  "tx": {
+    "tx_hash": "0x17ff48e84ee657a47285a61456dfd2580598bcc4e4d196738bef13f4248d6411",
+    "status_name": "ACCEPTED",
+    "result_name": "MAJORITY_AGREE",
+    "execution_result": "SUCCESS",
+    "error": null
+  },
+  "latencySec": 21.1665576,
+  "decision": {
+    "action_hash": "d1e58b5135c56d6f439e513e79c70b7225edb3c5b35e9dfde831f2257826ee6d",
+    "amount": "40",
+    "asset": "USDC",
+    "calldata_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "category": "server_ops",
+    "id": "1",
+    "justification": "Monthly AWS server hosting renewal",
+    "policy_id": "1",
+    "recipient": "0x1111111111111111111111111111111111111111",
+    "resolved_by_owner": false,
+    "schema_version": "2",
+    "seq": "1",
+    "source": "JUDGE",
+    "status": "CLEARED",
+    "verdict": "ALLOW"
+  },
+  "is_cleared_for_exact": true,
+  "mismatch_tests": {
+    "wrong policy_id": false,
+    "wrong recipient": false,
+    "wrong asset": false,
+    "wrong amount": false,
+    "wrong calldata": false,
+    "wrong decision": false
+  }
+}

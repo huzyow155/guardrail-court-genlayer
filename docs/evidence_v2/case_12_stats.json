@@ -1,0 +1,40 @@
+{
+  "policy_1": {
+    "cleared_count": 2,
+    "pending_owner_count": 3,
+    "policy_id": "1",
+    "schema_version": "2",
+    "sources": {
+      "ASSET_GUARD": 1,
+      "HARD_LIMIT": 1,
+      "JUDGE": 7,
+      "RECIPIENT_GUARD": 1,
+      "VELOCITY": 0
+    },
+    "total_decisions": 10,
+    "verdicts": {
+      "ALLOW": 2,
+      "DENY": 5,
+      "ESCALATE": 3
+    }
+  },
+  "policy_2": {
+    "cleared_count": 0,
+    "pending_owner_count": 10,
+    "policy_id": "2",
+    "schema_version": "2",
+    "sources": {
+      "ASSET_GUARD": 0,
+      "HARD_LIMIT": 0,
+      "JUDGE": 11,
+      "RECIPIENT_GUARD": 0,
+      "VELOCITY": 0
+    },
+    "total_decisions": 11,
+    "verdicts": {
+      "ALLOW": 0,
+      "DENY": 1,
+      "ESCALATE": 10
+    }
+  }
+}

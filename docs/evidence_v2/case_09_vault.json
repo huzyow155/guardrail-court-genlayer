@@ -1,0 +1,31 @@
+{
+  "execute_cleared": {
+    "tx_hash": "0xb4f75402c09bea6fdbf1609e0079eb089d485a93871887b71390c1150cd84280",
+    "status_name": "ACCEPTED",
+    "result_name": "MAJORITY_AGREE",
+    "execution_result": "SUCCESS",
+    "error": null
+  },
+  "vault_is_executed": true,
+  "replay_attack": {
+    "tx_hash": "0xe6ef8621642d51299381ecbc34f9c5505b093e9bc28c0a25f594bf8e94b9c23e",
+    "status_name": "ACCEPTED",
+    "result_name": "MAJORITY_AGREE",
+    "execution_result": "ERROR",
+    "error": "\"decision has already been executed\""
+  },
+  "parameter_tamper": {
+    "tx_hash": "0x75672bf05a8eddbcdc29b57d160d6a4b0a2ba8487582cef2eaa38e0bc553d386",
+    "status_name": "ACCEPTED",
+    "result_name": "MAJORITY_AGREE",
+    "execution_result": "ERROR",
+    "error": "\"clearance does not match this action\""
+  },
+  "execution_on_paused_policy": {
+    "tx_hash": "0xfdd8b9bc0b3f3d2532303e7e7efbb741f54435296e37841002258a592df86f9b",
+    "status_name": "ACCEPTED",
+    "result_name": "MAJORITY_AGREE",
+    "execution_result": "ERROR",
+    "error": "\"clearance does not match this action\""
+  }
+}

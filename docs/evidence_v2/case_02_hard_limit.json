@@ -1,0 +1,28 @@
+{
+  "tx": {
+    "tx_hash": "0x7b92bf05ea02125b59579e5f1cd72620a43fdc17da5af6eec1ff057e1929202a",
+    "status_name": "ACCEPTED",
+    "result_name": "MAJORITY_AGREE",
+    "execution_result": "SUCCESS",
+    "error": null
+  },
+  "latencySec": 9.033524799999999,
+  "decision": {
+    "action_hash": "6b8dc5c7de9fcb0a8eda999b10ad25ab6284c60d09d82fcc0672ebb14d8c584c",
+    "amount": "101",
+    "asset": "USDC",
+    "calldata_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "category": "server_ops",
+    "id": "2",
+    "justification": "Over limit server order",
+    "policy_id": "1",
+    "recipient": "0x1111111111111111111111111111111111111111",
+    "resolved_by_owner": false,
+    "schema_version": "2",
+    "seq": "2",
+    "source": "HARD_LIMIT",
+    "status": "DENIED",
+    "verdict": "DENY"
+  },
+  "is_cleared_for": false
+}

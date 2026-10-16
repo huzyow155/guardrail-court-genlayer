@@ -1,0 +1,38 @@
+{
+  "policy_2_creation": {
+    "tx_hash": "0xb88bc70d01970cb30f69ab626cabee408b073fcd8b636c12cf6b8f6f5bff7155",
+    "status_name": "ACCEPTED",
+    "result_name": "MAJORITY_AGREE",
+    "execution_result": "SUCCESS",
+    "error": null
+  },
+  "initial_fill": {
+    "tx_hash": "0x9377cc50b49826af6a4b5fc29a6fa098128e22d6eb019d07cc484d84206008f4",
+    "status_name": "ACCEPTED",
+    "result_name": "MAJORITY_AGREE",
+    "execution_result": "SUCCESS",
+    "error": null
+  },
+  "pending_10_count": 10,
+  "cap_overflow_revert": {
+    "tx_hash": "0x9751c07ba6ca6d67926821096093f1090debc9beea6aec94abb6dcc38ba1af93",
+    "status_name": "ACCEPTED",
+    "result_name": "MAJORITY_AGREE",
+    "execution_result": "ERROR",
+    "error": "\"too many pending escalations\""
+  },
+  "resolve_freed_capacity": {
+    "tx_hash": "0x3158f601f9eafc5dc64d53d6cf0cbd9c7841dfef823e8e3d6247ac3aec917315",
+    "status_name": "ACCEPTED",
+    "result_name": "MAJORITY_AGREE",
+    "execution_result": "SUCCESS",
+    "error": null
+  },
+  "retry_succeed": {
+    "tx_hash": "0x561cdd7d4b7a9682d74a0929f840ee6fcbe9d73543ae0f23e9eab31b592a44c0",
+    "status_name": "ACCEPTED",
+    "result_name": "MAJORITY_AGREE",
+    "execution_result": "SUCCESS",
+    "error": null
+  }
+}

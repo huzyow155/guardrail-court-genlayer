@@ -1,0 +1,56 @@
+{
+  "case_3a_recipient": {
+    "tx": {
+      "tx_hash": "0x240ca57c087568fc9cc8c693911c8f41018b92ea0bd1e9e0b5198fee4a2f4118",
+      "status_name": "ACCEPTED",
+      "result_name": "MAJORITY_AGREE",
+      "execution_result": "SUCCESS",
+      "error": null
+    },
+    "latencySec": 9.557196099999993,
+    "decision": {
+      "action_hash": "dd557142835963c9ba5b1d1e39f53488c59059b0f6750c2ae33cb7b8a17866a9",
+      "amount": "40",
+      "asset": "USDC",
+      "calldata_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "category": "server_ops",
+      "id": "3",
+      "justification": "Server order to unlisted vendor",
+      "policy_id": "1",
+      "recipient": "0x2222222222222222222222222222222222222222",
+      "resolved_by_owner": false,
+      "schema_version": "2",
+      "seq": "3",
+      "source": "RECIPIENT_GUARD",
+      "status": "DENIED",
+      "verdict": "DENY"
+    }
+  },
+  "case_3b_asset": {
+    "tx": {
+      "tx_hash": "0x76213a0c685051858c93651481c2610e8ee974014275ace16c6ea323d21de613",
+      "status_name": "ACCEPTED",
+      "result_name": "MAJORITY_AGREE",
+      "execution_result": "SUCCESS",
+      "error": null
+    },
+    "latencySec": 9.08700820000001,
+    "decision": {
+      "action_hash": "17d0032d518706cda53a3020256d82b8c49d26b136c4ebc37b2ad329a572a432",
+      "amount": "40",
+      "asset": "DAI",
+      "calldata_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "category": "server_ops",
+      "id": "4",
+      "justification": "Server order in unlisted token DAI",
+      "policy_id": "1",
+      "recipient": "0x1111111111111111111111111111111111111111",
+      "resolved_by_owner": false,
+      "schema_version": "2",
+      "seq": "4",
+      "source": "ASSET_GUARD",
+      "status": "DENIED",
+      "verdict": "DENY"
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "newline_revert": {
+    "tx_hash": "0x966193eb70e1cbbae121de5035928b1851f24da7ac91b29b0f94084eea5dbaa7",
+    "status_name": "ACCEPTED",
+    "result_name": "MAJORITY_AGREE",
+    "execution_result": "ERROR",
+    "error": "\"justification length must be between 5 and 600 characters without control chars\""
+  },
+  "short_justification_revert": {
+    "tx_hash": "0x44f74cffb65094c12389abcc94be6a4e62ab96e76f43049bb7ad01cad82134bb",
+    "status_name": "ACCEPTED",
+    "result_name": "MAJORITY_AGREE",
+    "execution_result": "ERROR",
+    "error": "\"justification length must be between 5 and 600 characters without control chars\""
+  },
+  "non_agent_revert": {
+    "tx_hash": "0x34fbf261cc43b553b5a4a11ce2d8b76096aa095f4d6d2bc6767eca2b938684ec",
+    "status_name": "ACCEPTED",
+    "result_name": "MAJORITY_AGREE",
+    "execution_result": "ERROR",
+    "error": "\"only the registered agent may request actions\""
+  },
+  "malformed_calldata_revert": {
+    "tx_hash": "0x37f65120e973d5d7eaacfc4fca30a2394329852d5f6d88a4ec596a76beeb38d9",
+    "status_name": "ACCEPTED",
+    "result_name": "MAJORITY_AGREE",
+    "execution_result": "ERROR",
+    "error": "\"calldata_hash must be a 64-character hex string\""
+  },
+  "zero_amount_revert": {
+    "tx_hash": "0xce4936a7f3bb98bcfc9142672565528fc22b11cb733eccc5b1f86533b3cdb210",
+    "status_name": "ACCEPTED",
+    "result_name": "MAJORITY_AGREE",
+    "execution_result": "ERROR",
+    "error": "\"amount must be >= 1\""
+  }
+}

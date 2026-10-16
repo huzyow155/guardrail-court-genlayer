@@ -1,0 +1,91 @@
+{
+  "slice_1": {
+    "tx_hash": "0x3076db6cdddc7e066893bf5df9599199c7eb29de01d2ccbd90b8a6084fa23f7e",
+    "status_name": "ACCEPTED",
+    "result_name": "MAJORITY_AGREE",
+    "execution_result": "SUCCESS",
+    "error": null
+  },
+  "slice_2": {
+    "tx_hash": "0x5eaf3372bc35d395e659c62589733f362513fd08f3e4affc8e54dfc8ccf176a7",
+    "status_name": "ACCEPTED",
+    "result_name": "MAJORITY_AGREE",
+    "execution_result": "SUCCESS",
+    "error": null
+  },
+  "slice_3": {
+    "tx_hash": "0x08835f61e6806a553c098718ed3fb2d8a7d6f8f56e81ae17563411ad2142fe3d",
+    "status_name": "ACCEPTED",
+    "result_name": "MAJORITY_AGREE",
+    "execution_result": "SUCCESS",
+    "error": null
+  },
+  "velocity_trip": {
+    "tx": {
+      "tx_hash": "0x35578eb043ce881a5a503a919167339c689c6ab55ff06a30dbca47d74515cd35",
+      "status_name": "ACCEPTED",
+      "result_name": "MAJORITY_AGREE",
+      "execution_result": "SUCCESS",
+      "error": null
+    },
+    "latencySec": 51.48390870000003,
+    "decision": {
+      "action_hash": "3598726ee31ae311dc1c4c66a561b895f85636228eb5ada905765be764501a00",
+      "amount": "100",
+      "asset": "USDC",
+      "calldata_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "category": "server_ops",
+      "id": "8",
+      "justification": "Server capacity scaling slice 4 exceeding cap",
+      "policy_id": "1",
+      "recipient": "0x1111111111111111111111111111111111111111",
+      "resolved_by_owner": false,
+      "schema_version": "2",
+      "seq": "8",
+      "source": "JUDGE",
+      "status": "PENDING_OWNER",
+      "verdict": "ESCALATE"
+    }
+  },
+  "resolve": {
+    "tx": {
+      "tx_hash": "0xae56f47dd56d8772a761505fba53c8a79272afd7431af1bfb7becd3b454d81bb",
+      "status_name": "ACCEPTED",
+      "result_name": "MAJORITY_AGREE",
+      "execution_result": "SUCCESS",
+      "error": null
+    },
+    "latencySec": 8.752237699999998,
+    "decision_post": {
+      "action_hash": "3598726ee31ae311dc1c4c66a561b895f85636228eb5ada905765be764501a00",
+      "amount": "100",
+      "asset": "USDC",
+      "calldata_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "category": "server_ops",
+      "id": "8",
+      "justification": "Server capacity scaling slice 4 exceeding cap",
+      "policy_id": "1",
+      "recipient": "0x1111111111111111111111111111111111111111",
+      "resolved_by_owner": true,
+      "schema_version": "2",
+      "seq": "8",
+      "source": "JUDGE",
+      "status": "CLEARED",
+      "verdict": "ALLOW"
+    }
+  },
+  "repeat_resolve_revert": {
+    "tx_hash": "0xc22d50c56bf798cd307588c8ba5614586e2b8bfcb86a2177cfd0667b954c676e",
+    "status_name": "ACCEPTED",
+    "result_name": "MAJORITY_AGREE",
+    "execution_result": "ERROR",
+    "error": "\"decision is not pending owner resolution\""
+  },
+  "non_owner_revert": {
+    "tx_hash": "0x8cb5ee18851c4fbce2a52d00ee3513e9d28f9e8b6df76c15509ad553e28775fa",
+    "status_name": "ACCEPTED",
+    "result_name": "MAJORITY_AGREE",
+    "execution_result": "ERROR",
+    "error": "\"only the policy owner may resolve escalations\""
+  }
+}
