@@ -1,0 +1,29 @@
+{
+  "network": "studionet",
+  "chain_id": 61999,
+  "rpc": "https://studio.genlayer.com/api",
+  "explorer_base": "https://explorer-studio.genlayer.com",
+  "deployed_at": "2026-10-16T04:53:37.146Z",
+  "git_commit": "87bbcd6ab4525ce87f175f81cfc66741eb5d91c7",
+  "contracts": {
+    "GuardrailCourtV2": {
+      "address": "0xF5797dDB4ce419ec50351BF9B48D5C24D5330d7b",
+      "deploy_tx_hash": "0x9010b9b20c6b21e0e980ac896a9f28708a195c419b5c8eca9b05426b4defab1b",
+      "source_sha256": "94BDA609903A2ECC854269307E628E49869A36B466DAE7CD941553406E12F9F6",
+      "explorer_url": "https://explorer-studio.genlayer.com/address/0xF5797dDB4ce419ec50351BF9B48D5C24D5330d7b"
+    },
+    "GuardedVaultV2": {
+      "address": "0xc0dF70EE8BEC7003EF6CCfb24590b4D559699b58",
+      "deploy_tx_hash": "0x7df07e95b5a20203845c23deb42e4e38724dc522b54be6b0101deb811ea1eb94",
+      "source_sha256": "7CB69D7745B0C9354ECA3D1D712EBF7099726298128C3C45E54F8C7CC2060366",
+      "court_address_arg": "0xF5797dDB4ce419ec50351BF9B48D5C24D5330d7b",
+      "explorer_url": "https://explorer-studio.genlayer.com/address/0xc0dF70EE8BEC7003EF6CCfb24590b4D559699b58"
+    }
+  },
+  "accounts": {
+    "owner": "0x726735AE8eBbD3bEA9441fFA66ca934a8FdDe4c9",
+    "agent": "0xd2d6D647bc489f63FE5ed81114dB9A70E1E6a766",
+    "other": "0xF42a7f9A3e5f37df026Eb4EC27B2bEDc67763C94",
+    "note": "Zero-balance throwaway accounts; Studionet consensus requires no gas payment."
+  }
+}
