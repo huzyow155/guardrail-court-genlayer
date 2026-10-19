@@ -1,10 +1,10 @@
 import re
 
-with open('contracts/GuardrailCourt.py', 'r', encoding='utf-8') as f:
+with open('archive/v1/GuardrailCourt.py', 'r', encoding='utf-8') as f:
     c_text = f.read()
 c_errs = sorted(list(set(re.findall(r'raise gl\.vm\.UserError\("([^"]+)"\)', c_text))))
 
-with open('tests/test_layer2_mocked.py', 'r', encoding='utf-8') as f:
+with open('archive/v1/tests/test_layer2_mocked.py', 'r', encoding='utf-8') as f:
     t_text = f.read()
 # Extract error assertions in Layer 2 contract tests
 t_errs = sorted(list(set(re.findall(r'self\.assertEqual\(str\(cm\.exception\),\s*"([^"]+)"\)', t_text))))

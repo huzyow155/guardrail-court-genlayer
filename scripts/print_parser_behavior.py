@@ -15,7 +15,7 @@ genlayer_mod.TreeMap = type("TreeMap", (), {"__class_getitem__": lambda cls, it:
 genlayer_mod.Address = str
 sys.modules["genlayer"] = genlayer_mod
 
-sys.path.insert(0, "contracts")
+sys.path.insert(0, "archive/v1")
 import GuardrailCourt
 
 test_cases = [

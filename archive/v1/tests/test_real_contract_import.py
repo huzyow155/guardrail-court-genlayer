@@ -4,10 +4,12 @@ import unittest
 
 import os
 sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../tests")))
 import genlayer_stub
 
 # Now import the REAL contracts/GuardrailCourt.py
 sys.path.insert(0, "contracts")
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 import GuardrailCourt
 
 class RealContractImportTest(unittest.TestCase):

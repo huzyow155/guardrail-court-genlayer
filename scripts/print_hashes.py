@@ -2,11 +2,13 @@ import hashlib
 import os
 
 FILES_TO_CHECK = [
-    "contracts/GuardrailCourt.py",
+    "archive/v1/GuardrailCourt.py",
     "contracts/GuardrailCourtV2.py",
     "examples/consumer/GuardedVaultV2.py",
-    "docs/V2_DESIGN.md",
-    "docs/ERROR_CODES.md",
+    "docs/DESIGN.md",
+    "docs/LIMITATIONS.md",
+    "docs/INTEGRATION.md",
+    "docs/VERIFICATION.md",
     "tests/test_v2_parser.py",
     "tests/test_v2_guards.py",
     "tests/test_v2_binding.py",

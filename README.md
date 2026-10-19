@@ -1,42 +1,39 @@
-# Guardrail Court
+# Submitted contract: Guardrail Court V2
 
-> Natural-language policy gate and multi-validator clearance protocol for autonomous AI agents on GenLayer Studionet.
+> Natural-language policy gate and multi-validator parameter-bound clearance protocol for autonomous AI agents on GenLayer Studionet.
 
-## Status: Preview
+## Active Contract Summary
 
-### Guardrail Court V2 (Current)
+| Contract | Address | Explorer Link | Deploy Tx Hash | Source SHA-256 | Repository Path | Status |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **GuardrailCourtV2** | `0xF5797dDB4ce419ec50351BF9B48D5C24D5330d7b` | [Explorer](https://explorer-studio.genlayer.com/address/0xF5797dDB4ce419ec50351BF9B48D5C24D5330d7b) | `0x9010b9b20c6b21e0e980ac896a9f28708a195c419b5c8eca9b05426b4defab1b` | `94BDA609903A2ECC854269307E628E49869A36B466DAE7CD941553406E12F9F6` | [`contracts/GuardrailCourtV2.py`](https://github.com/huzyow155/guardrail-court-genlayer/blob/v2-review/contracts/GuardrailCourtV2.py) | **Active (Round 2)** |
+| **GuardedVaultV2** | `0xc0dF70EE8BEC7003EF6CCfb24590b4D559699b58` | [Explorer](https://explorer-studio.genlayer.com/address/0xc0dF70EE8BEC7003EF6CCfb24590b4D559699b58) | `0x7df07e95b5a20203845c23deb42e4e38724dc522b54be6b0101deb811ea1eb94` | `7CB69D7745B0C9354ECA3D1D712EBF7099726298128C3C45E54F8C7CC2060366` | [`examples/consumer/GuardedVaultV2.py`](https://github.com/huzyow155/guardrail-court-genlayer/blob/v2-review/examples/consumer/GuardedVaultV2.py) | **Active (Round 2)** |
 
-Guardrail Court V2 addresses reviewer feedback by binding clearance directly to action parameters, introducing deterministic whitelist guards, enforcing strict fail-closed JSON parsing, adding an emergency pause circuit-breaker, and capping pending escalation queues.
-
-- **GuardrailCourtV2 Address**: [`0xF5797dDB4ce419ec50351BF9B48D5C24D5330d7b`](https://explorer-studio.genlayer.com/address/0xF5797dDB4ce419ec50351BF9B48D5C24D5330d7b)
-  - **Deploy Transaction**: `0x9010b9b20c6b21e0e980ac896a9f28708a195c419b5c8eca9b05426b4defab1b`
-  - **Source SHA-256**: `94BDA609903A2ECC854269307E628E49869A36B466DAE7CD941553406E12F9F6`
-- **GuardedVaultV2 (Consumer) Address**: [`0xc0dF70EE8BEC7003EF6CCfb24590b4D559699b58`](https://explorer-studio.genlayer.com/address/0xc0dF70EE8BEC7003EF6CCfb24590b4D559699b58)
-  - **Deploy Transaction**: `0x7df07e95b5a20203845c23deb42e4e38724dc522b54be6b0101deb811ea1eb94`
-  - **Source SHA-256**: `7CB69D7745B0C9354ECA3D1D712EBF7099726298128C3C45E54F8C7CC2060366`
-- **Network**: GenLayer Studionet (Chain ID: 61999)
-- **License**: MIT (c) 2026 Hyper
-
-*(Historical V1 contract preserved unmodified at `0x6C553Ba27a768D71b570a106D9D2e13553b4103c`)*
+**V1 is archived and superseded**: See [`archive/v1/README.md`](archive/v1/README.md). Historical V1 contract was deployed at `0x6C553Ba27a768D71b570a106D9D2e13553b4103c` and is kept solely for immutable on-chain auditability. Do not integrate or use V1.
 
 ---
 
-### V2 Documentation
-- [`docs/INTEGRATION_V2.md`](docs/INTEGRATION_V2.md): Complete V2 ABI, schemas, UserError catalog, latency table, and consumer integration.
-- [`docs/V2_VERIFICATION.md`](docs/V2_VERIFICATION.md): On-chain verification registry and raw test evidence for 12 cases.
-- [`docs/V2_ACTUAL.md`](docs/V2_ACTUAL.md): Empirical results vs pre-registered expectations matrix and key findings.
-- [`docs/V2_DESIGN.md`](docs/V2_DESIGN.md): V2 architectural design and parameter-bound clearance protocol.
-- [`docs/V2_EXPECTED.md`](docs/V2_EXPECTED.md): Pre-registered expected outcomes matrix across 12 test scenarios.
+## Reviewer Feedback and Where It Is Addressed
 
-## The Problem
+> **Reviewer Feedback (Verbatim)**:
+> *"Please update the court so model output is accepted only as an exact, schema-valid verdict and every malformed, ambiguous, or multi-verdict response fails closed to ESCALATE; remove the substring fallback that can turn prose quoting an ALLOW fragment into approval. Also separate or escape owner/agent data so a description cannot spoof prompt boundaries or instructions. Then submit matching updated repository and Explorer deployment source for verification."*
 
-Autonomous AI agents equipped with discretionary capabilities, API tokens, or on-chain signing keys operate faster than humans can review. Currently, the entity deciding whether a planned action complies with an owner's intent is typically the agent itself or a single prompt guardrail running on the same host infrastructure. If an agent hallucinates, suffers a prompt injection, or operates under misaligned incentives, unauthorized actions execute immediately without independent review.
+The table below maps each reviewer feedback requirement to its exact implementation, test proof, and verification artifact pinned to tag `v2-review`:
+
+| Reviewer Feedback Point | Implementation / Resolution | Permalinks & File Locations | Verification & Test Evidence |
+| :--- | :--- | :--- | :--- |
+| **1. Strict Model Parser & Fail-Closed ESCALATE** | Strict parser accepts ONLY a single JSON object with EXACTLY one key `verdict` with value in `("ALLOW", "DENY", "ESCALATE")`. Rejects duplicate keys via `object_pairs_hook`, rejects multi-token contradictions, rejects prose, rejects unparseable strings, and eliminates the V1 substring fallback entirely. | [`contracts/GuardrailCourtV2.py#L83-L153`](https://github.com/huzyow155/guardrail-court-genlayer/blob/v2-review/contracts/GuardrailCourtV2.py#L83-L153) (`_parse_verdict`) | [`tests/test_reviewer_regressions.py`](https://github.com/huzyow155/guardrail-court-genlayer/blob/v2-review/tests/test_reviewer_regressions.py), [`tests/test_v2_parser.py`](https://github.com/huzyow155/guardrail-court-genlayer/blob/v2-review/tests/test_v2_parser.py), and [`scripts/demo_reviewer_cases.py`](https://github.com/huzyow155/guardrail-court-genlayer/blob/v2-review/scripts/demo_reviewer_cases.py) |
+| **2. Remove Substring Fallback** | The V1 fallback branch scanning raw text for an uppercase allow verdict substring is completely eradicated from all active contracts and tests. | Zero occurrences in active repo ([`archive/v1/README.md`](archive/v1/README.md)) | Demonstrated via `scripts/demo_reviewer_cases.py` (V1 ALLOW -> V2 ESCALATE) |
+| **3. Escape Owner/Agent Data & Separate Boundaries** | Untrusted policy text, history items, and action parameters (`category`, `recipient`, `asset`, `amount`, `calldata_hash`, `justification`) are serialized into a single strict `CONTEXT` JSON object (`json.dumps(context_obj, sort_keys=True, indent=2)`). System instructions and task description remain isolated outside the JSON block. Delimiter breakout text cannot alter prompt structure. | [`contracts/GuardrailCourtV2.py#L439-L476`](https://github.com/huzyow155/guardrail-court-genlayer/blob/v2-review/contracts/GuardrailCourtV2.py#L439-L476) (`request_action` prompt builder) | [`tests/test_reviewer_regressions.py`](https://github.com/huzyow155/guardrail-court-genlayer/blob/v2-review/tests/test_reviewer_regressions.py) (`test_prompt_boundary_and_context_isolation`), [`tests/test_v2_guards.py`](https://github.com/huzyow155/guardrail-court-genlayer/blob/v2-review/tests/test_v2_guards.py), and on-chain Case 5b (`0x2754665b...`) |
+| **4. Matching Deployment Source Verification** | Decoded deploy transaction payload from RPC `eth_getTransactionByHash` and verified byte-for-byte exact 1:1 match against repository source. Diff is 0 bytes. | [`docs/evidence_v2/source_verification_round2.txt`](https://github.com/huzyow155/guardrail-court-genlayer/blob/v2-review/docs/evidence_v2/source_verification_round2.txt) | Generated by [`scripts/verify_source_round2.mjs`](https://github.com/huzyow155/guardrail-court-genlayer/blob/v2-review/scripts/verify_source_round2.mjs) |
+
+> [!NOTE]
+> **Offline-Tested vs On-Chain Tested Boundary**:
+> The strict parser fail-closed behavior for malformed JSON, multi-verdict strings, prose quoting ALLOW, and Cyrillic homoglyphs is **offline-tested via comprehensive Python unit tests and property fuzzer** (`tests/test_reviewer_regressions.py`). The foundation model cannot be forced to deterministically emit malformed JSON on the live Studionet network. Live on-chain evidence demonstrates clean JSON execution, prompt injection rejection, parameter mismatch denials, deterministic guard short-circuits, and vault single-use enforcement.
 
 ---
 
-## The Solution: Guardrail Court
-
-**Guardrail Court** is an on-chain intelligent policy gate where human owners define plain-language rules alongside hard numeric spending parameters. Before taking discretionary actions, the registered agent submits an action request to the contract.
+## Architecture Overview
 
 ```
                       +-----------------------------+
@@ -45,18 +42,28 @@ Autonomous AI agents equipped with discretionary capabilities, API tokens, or on
                                      |
                                      v
                       +-----------------------------+
-                      |    1. Hard Limit Guard      |  > max_amount? -> DENY (Zero LLM, ~5s)
+                      |    1. Hard Limit Guard      |  > max_amount? -> DENY (Deterministic, 0 LLM)
                       +--------------+--------------+
                                      | Passes
                                      v
                       +-----------------------------+
-                      |  2. Velocity History Guard  |  Cleared sum in category (from 15 recent) > window_cap? -> ESCALATE (~5s)
+                      | 2. Recipient & Asset Guards |  Not in allowed lists? -> DENY (Deterministic)
                       +--------------+--------------+
                                      | Passes
                                      v
                       +-----------------------------+
-                      |   3. Multi-Validator LLM    |
-                      |          Consensus          |  strict_eq(ALLOW | DENY | ESCALATE)
+                      | 3. Pending Queue Cap Guard  |  >= 10 PENDING_OWNER? -> Revert (Queue Flooding Guard)
+                      +--------------+--------------+
+                                     | Passes
+                                     v
+                      +-----------------------------+
+                      |  4. Velocity History Guard  |  Cleared sum in 30 recent > window_cap? -> ESCALATE
+                      +--------------+--------------+
+                                     | Passes
+                                     v
+                      +-----------------------------+
+                      |   5. Multi-Validator LLM    |
+                      |          Consensus          |  strict_eq(_parse_verdict(raw_output))
                       +--------------+--------------+
                                      |
              +-----------------------+-----------------------+
@@ -64,94 +71,77 @@ Autonomous AI agents equipped with discretionary capabilities, API tokens, or on
              v                       v                       v
       +--------------+        +--------------+        +--------------+
       |    ALLOW     |        |     DENY     |        |   ESCALATE   |
-      | (CLEARED)    |        |   (DENIED)   |        |  (Owner Box) |
-      +--------------+        +--------------+        +-------+------+
-                                                              |
-                                                              v
-                                                      Owner Resolves:
-                                                      ALLOW or DENY
+      | (CLEARED)    |        |   (DENIED)   |        | (PENDING_OWNER)|
+      +-------+------+        +--------------+        +-------+------+
+              |                                               |
+              v                                               v
+   +----------------------+                           Owner Resolves:
+   | Action-Bound Hash:   |                           ALLOW or DENY
+   | GC2|policy|cat|recip |
+   | |asset|amt|calldata  |
+   +----------+-----------+
+              |
+              v
+   Downstream Consumer (GuardedVaultV2)
+   Verifies 5-tuple action match & single use
 ```
 
-### 1. Two-Tier Evaluation Architecture
-1. **Deterministic Guard (Pre-LLM)**:
-    - `HARD_LIMIT`: If `max_amount > 0` and `amount > max_amount` (`"0"` disables the limit), rejects immediately with `source: HARD_LIMIT` and `status: DENIED` (5.26s measured).
-    - `VELOCITY`: Scans `policy_history_ids[:15]` (the 15 most recent decisions of the entire policy across all categories), filters for decisions matching the requested `category` (up to 10 matching items), and sums `amount` where `status == "CLEARED"` or `verdict == "ALLOW"`. If `window_cap > 0` (`"0"` disables the cap) and `cleared_sum + amount > window_cap`, routes directly to `source: VELOCITY` and `status: PENDING_OWNER` (5.30s measured). Note: Does not aggregate across time duration or across different categories, and >15 intervening decisions in other categories will push older same-category decisions out of the 15-item scan window.
-2. **Multi-Validator Consensus (`JUDGE`)**:
-   - Actions within numeric limits are dispatched to validators on the Studionet network (exact underlying model families run by network nodes are not verified from contract state).
-   - Validators reach consensus exclusively on a single canonical enum: `ALLOW`, `DENY`, or `ESCALATE` (measured range: 11.93s to 32.03s, exact arithmetic mean: 19.02s across n=8 verified transactions).
-   - Outputs that do not parse as valid JSON generally default to `ESCALATE`; **HOWEVER**, the fallback branch matches the substring `"VERDICT": "ALLOW"` (or `'VERDICT': 'ALLOW'`) in upper-cased prose before checking `DENY`, returning `ALLOW` if that substring appears in prose (see `test_parser_fallback_documents_known_fail_open_path` and `docs/LIMITATIONS.md` #1). The deployed contract is immutable.
+---
+
+## Residual Limits and Assumptions
+
+As detailed in [`docs/LIMITATIONS.md`](docs/LIMITATIONS.md):
+1. **Model Judgment Variability**: Foundation models evaluate natural-language intent and semantic meaning. Edge cases or ambiguous requests can produce varying model outputs across runs. Guardrail Court V2 guarantees that any ambiguous or malformed output strictly fails closed to `ESCALATE` (`PENDING_OWNER`), safely defaulting to human operator discretion.
+2. **Absence of Clearance Expiry**: Due to the absence of a synchronized wall-clock primitive in GenVM, clearances do not expire automatically. A clearance remains active until executed by a single-use consumer or until the policy is paused via `set_paused(policy_id, True)`.
+3. **Calldata Hash Binding**: The court strictly validates the hexadecimal format of `calldata_hash` and immutably binds it to the clearance `action_hash`. However, the court does not decode calldata contents; downstream consumers must compute the hash of the calldata to be executed and pass it to `court.is_cleared(...)`.
 
 ---
 
-## Non-Goals
-- **No Execution or Custody**: The contract does not execute transactions, custody tokens, or hold private keys. It publishes clearance decisions.
-- **Demo Consumer Role**: The accompanying `GuardedVault` consumer contract is a test harness illustrating cross-contract clearance verification via `court.view().is_cleared(decision_id)`. It does not custody or transfer real cryptocurrencies.
-- **Advisory Role**: The contract is advisory unless downstream executors verify `is_cleared(decision_id)` and independently check that the decision parameters match the executed action.
-- **Currency Agnostic**: The contract does not interpret denominations (USD, EUR, ETH, wei); amounts are non-negative integer strings.
-- **Unreported Actions**: It cannot constrain actions that an agent operator fails to submit.
-- **Not Scoped Credentials**: It is an audit and authorization gate, not an IAM or API key replacement.
+## On-Chain Verified Evidence Summary (Studionet)
 
----
+Live transactions executed and verified on GenLayer Studionet (see [`docs/VERIFICATION.md`](docs/VERIFICATION.md)):
 
-## On-Chain Verified Evidence (Studionet)
-
-Transactions executed and verified on GenLayer Studionet (see [`docs/VERIFICATION.md`](docs/VERIFICATION.md) and [`docs/RECEIPTS.md`](docs/RECEIPTS.md)):
-
-| Run | Scenario | Transaction Hash | Verdict | Source | Latency | `is_cleared` |
+| Case | Scenario | Transaction Hash | Consensus | Verdict | Source | Latency |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **(a)** | Clear ALLOW (Domain renewal) | `0x9a52e1031febbdbde4c9bdccb85b31a8a4212ae0c403a4836253f9571bb6d131` | `ALLOW` | `JUDGE` | 11.93s | `true` |
-| **(b)** | Clear DENY (Gift card for individual) | `0xf6cee5bcec34932a6022bff401307fa2aac906632cc5ec1ea021d727003c90df` | `DENY` | `JUDGE` | 15.45s | `false` |
-| **(c)** | Ambiguous purchase (Conference pass & lunch) | `0xad1894bed165db218c7e66151efc3fe31148d7feca1deaf777baa0876e184d81` | `ESCALATE` | `JUDGE` | 18.57s | `false` |
-| **(d)** | `HARD_LIMIT` DENY (Amount 150 > cap 100) | `0x60251f8d782ac69f51b55cd4b545e36862163b52a3d63735440138bf52e7af05` | `DENY` | `HARD_LIMIT` | 5.26s | `false` |
-| **(e)** | Salami-slicing velocity trip (5 x 90 > 400) | `0x87339f78182a6b95bbc465154b9b0ed825f4aa5687665d1585d5e631387e1604` | `ESCALATE` | `VELOCITY` | 5.30s | `false` |
-| **(f)** | Owner resolves Decision 3 to ALLOW | `0x5fbd13afeef7029c70ee2b51377a1e0d8646517aa269430c25b784137b25fadd` | `ALLOW` | Owner | 8.47s | `true` |
-| **(g)** | Prompt injection resistance on casino token | `0x5f71327df1b6d8c725572cc9e7572b16c186ddf6efc0bf497ce6a68eed33ff67` | `DENY` | `JUDGE` | 15.28s | `false` |
-| **(h)** | Owner Pause kill-switch toggle | `0xf739cb6bb69a7d4a9a065b16be46edf6c721fd6453548b666bca46ba40fa93a4` | `PAUSED` | Owner | n/a (not recorded) | Rejects writes |
+| **Case 1** | Clean operational request (40 USDC) | `0x17ff48e84ee657a47285a61456dfd2580598bcc4e4d196738bef13f4248d6411` | `MAJORITY_AGREE` | `ALLOW` | `JUDGE` | 21.17s |
+| **Case 2** | Amount exceeding max_amount (101 USDC) | `0x7b92bf05ea02125b59579e5f1cd72620a43fdc17da5af6eec1ff057e1929202a` | `MAJORITY_AGREE` | `DENY` | `HARD_LIMIT` | 9.03s |
+| **Case 3a** | Unauthorized recipient address | `0x240ca57c087568fc9cc8c693911c8f41018b92ea0bd1e9e0b5198fee4a2f4118` | `MAJORITY_AGREE` | `DENY` | `RECIPIENT_GUARD` | 9.56s |
+| **Case 3b** | Unauthorized asset (`DAI`) | `0x76213a0c685051858c93651481c2610e8ee974014275ace16c6ea323d21de613` | `MAJORITY_AGREE` | `DENY` | `ASSET_GUARD` | 9.09s |
+| **Case 4b** | Live velocity guard trip (60 + 60 > 100) | `0xfcc8e570cce2abdeb0583f0fdd9a569f1169dbab0af3e106b749559fb8fc9d80` | `MAJORITY_AGREE` | `ESCALATE` | `VELOCITY` | 8.75s |
+| **Case 5b** | Prompt injection resistance (delimiter spoof) | `0x2754665b53f5ff8429fdc6c2a931aee3b1c88feba887917fb99f310bf92ca782` | `MAJORITY_AGREE` | `DENY` | `JUDGE` | 24.24s |
+| **Case 7** | Owner emergency pause toggle | `0xd25e8165be376b53a01209eea0a7162e9e82aa6275fca5d507abc9f57d1ae0ae` | `MAJORITY_AGREE` | N/A | Owner | 9.03s |
+| **Case 8** | Pending escalation queue cap (10 items) | `0x7289222372a79b933aa9f3b19dc39352539725062c782661e557efdbe0c47ada` | `MAJORITY_AGREE` | Revert | Gate | 5.37s |
+| **Case 9** | Parameter-bound single-use execution on vault | `0xb4f75402c09bea6fdbf1609e0079eb089d485a93871887b71390c1150cd84280` | `MAJORITY_AGREE` | Executed | Vault | 8.49s |
 
 ---
 
-## How to Test
+## Verification & Testing
 
 ```bash
-# Run all 51 unit tests
-# Note: These 51 unit tests run contract code through a minimal genlayer stub on CPython,
-# replacing strict_eq and exec_prompt with mocks, and do not exercise consensus or model behavior.
+# 1. Run all unit tests and reviewer regressions
 python -m unittest discover tests
 
-# Run security scanners
+# 2. Run reviewer before-and-after demonstration script
+python scripts/demo_reviewer_cases.py
+
+# 3. Run security and hygiene scanners
 python scripts/scan_secrets.py
 python scripts/scan_banned_words.py
 python scripts/scan_ascii.py
+python scripts/check_links.py
+
+# 4. Verify on-chain source parity against RPC
+node scripts/verify_source_round2.mjs
 ```
 
 ---
 
-## Deploy to Studionet
+## Documentation Index
 
-```bash
-# Install SDK dependencies
-npm install
-
-# Deploy probe contract (Milestone 0)
-node scripts/deploy/deploy_probe.js
-
-# Deploy core contract verification (Milestone 1)
-node scripts/deploy/deploy_core.js
-
-# Deploy full contract and run evidence rounds (Milestone 4)
-node scripts/deploy/run_live_evidence.js
-
-# Deploy consumer contract for cross-contract validation (Milestone 5)
-node scripts/deploy/deploy_consumer.js
-```
-
----
-
-## Documentation Links
-- [`docs/PRIOR_ART.md`](docs/PRIOR_ART.md): Prior art comparison against NeMo Guardrails, OPA, and Safe modules.
-- [`docs/DESIGN.md`](docs/DESIGN.md): Consensus primitive design and state schema.
-- [`docs/INTEGRATION.md`](docs/INTEGRATION.md): Integration guide for agent runtimes and frontend dashboards.
-- [`docs/RUNTIME_NOTES.md`](docs/RUNTIME_NOTES.md): Runtime probe measurements and GenVM behavior.
-- [`docs/VERIFICATION.md`](docs/VERIFICATION.md): Deployment hashes, byte-for-byte SHA-256 verification, and receipts.
-- [`docs/LIMITATIONS.md`](docs/LIMITATIONS.md): Known limitations, performance characteristics, and threat model.
-- [`docs/ERROR_CODES.md`](docs/ERROR_CODES.md): Catalogue of all UserError strings and preconditions.
+- [`docs/INTEGRATION.md`](docs/INTEGRATION.md): Complete V2 integration guide, ABI specification, and parameter-binding instructions.
+- [`docs/VERIFICATION.md`](docs/VERIFICATION.md): On-chain verification registry, raw transaction hashes, and receipts across 12 test scenarios.
+- [`docs/DESIGN.md`](docs/DESIGN.md): V2 architectural design and parameter-bound clearance protocol.
+- [`docs/LIMITATIONS.md`](docs/LIMITATIONS.md): Current V2 limitations, threat model, and security boundaries.
+- [`docs/ACTUAL.md`](docs/ACTUAL.md): Empirical test results vs pre-registered expectations matrix.
+- [`docs/EXPECTED.md`](docs/EXPECTED.md): Pre-registered test scenarios and expected outcomes.
+- [`archive/v1/README.md`](archive/v1/README.md): Historical V1 archive documentation.

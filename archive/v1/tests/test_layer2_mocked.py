@@ -5,10 +5,12 @@ import json
 
 # Import genlayer stub and real GuardrailCourt contract
 sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../tests")))
 import genlayer_stub
 from genlayer import gl
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'contracts')))
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 import GuardrailCourt
 
 UserError = gl.vm.UserError

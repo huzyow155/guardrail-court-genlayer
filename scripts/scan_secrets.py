@@ -9,6 +9,7 @@ SECRET_PATTERNS = [
 ]
 
 IGNORE_DIRS = {'.git', 'node_modules', '__pycache__', '.venv', 'venv'}
+IGNORE_FILES = {'.env', '.env.local'}
 
 def scan_file(filepath):
     findings = []
@@ -28,6 +29,8 @@ def main():
     for root, dirs, files in os.walk(root_dir):
         dirs[:] = [d for d in dirs if d not in IGNORE_DIRS]
         for f in files:
+            if f in IGNORE_FILES:
+                continue
             path = os.path.join(root, f)
             findings = scan_file(path)
             if findings:

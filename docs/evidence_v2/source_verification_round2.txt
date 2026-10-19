@@ -1,0 +1,38 @@
+======================================================================
+GUARDRAIL COURT V2: FRESH SOURCE VERIFICATION (ROUND 2)
+Timestamp: 2026-10-19T02:12:16.336Z
+Network: Studionet (RPC: https://studio.genlayer.com/api)
+======================================================================
+
+--- Verifying GuardrailCourtV2 ---
+Contract Address: 0xF5797dDB4ce419ec50351BF9B48D5C24D5330d7b
+Deploy Tx Hash:   0x9010b9b20c6b21e0e980ac896a9f28708a195c419b5c8eca9b05426b4defab1b
+Payload Length:   28378 bytes (Local: 28378 bytes)
+First 16 bytes (hex): 232076302e322e31360a23207b202244
+First 16 bytes (raw): "# v0.2.16\n# { \"D"
+Last 16 bytes (hex):  6f72733d28222c222c20223a2229290a
+Last 16 bytes (raw):  "ors=(\",\", \":\"))\n"
+On-Chain SHA-256: 94BDA609903A2ECC854269307E628E49869A36B466DAE7CD941553406E12F9F6
+Local SHA-256:    94BDA609903A2ECC854269307E628E49869A36B466DAE7CD941553406E12F9F6
+Wrote extracted on-chain source to: guardrail court_V2\docs\evidence_v2\extracted_court_round2.py
+Byte-for-byte exact equality: true
+Diff output against guardrail court_V2\contracts\GuardrailCourtV2.py: [EMPTY DIFF - 0 bytes difference]
+
+--- Verifying GuardedVaultV2 ---
+Contract Address: 0xc0dF70EE8BEC7003EF6CCfb24590b4D559699b58
+Deploy Tx Hash:   0x7df07e95b5a20203845c23deb42e4e38724dc522b54be6b0101deb811ea1eb94
+Payload Length:   2310 bytes (Local: 2310 bytes)
+First 16 bytes (hex): 232076302e322e31360a23207b202244
+First 16 bytes (raw): "# v0.2.16\n# { \"D"
+Last 16 bytes (hex):  73656c662e657865637574696f6e730a
+Last 16 bytes (raw):  "self.executions\n"
+On-Chain SHA-256: 7CB69D7745B0C9354ECA3D1D712EBF7099726298128C3C45E54F8C7CC2060366
+Local SHA-256:    7CB69D7745B0C9354ECA3D1D712EBF7099726298128C3C45E54F8C7CC2060366
+Wrote extracted on-chain source to: guardrail court_V2\docs\evidence_v2\extracted_vault_round2.py
+Byte-for-byte exact equality: true
+Diff output against guardrail court_V2\examples\consumer\GuardedVaultV2.py: [EMPTY DIFF - 0 bytes difference]
+
+======================================================================
+FINAL VERIFICATION RESULT: Byte-for-byte 1:1 match for all V2 contracts.
+Local repository source matches deployed on-chain source byte for byte.
+======================================================================

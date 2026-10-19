@@ -4,9 +4,11 @@ import os
 
 # Import genlayer stub and real GuardrailCourt contract
 sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../tests")))
 import genlayer_stub
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'contracts')))
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 import GuardrailCourt
 
 # Bind directly to the pure functions in contracts/GuardrailCourt.py

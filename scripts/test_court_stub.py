@@ -1,7 +1,7 @@
 import sys
 sys.path.insert(0, 'tests')
 import genlayer_stub
-sys.path.insert(0, 'contracts')
+sys.path.insert(0, 'archive/v1')
 import GuardrailCourt
 from genlayer import gl
 

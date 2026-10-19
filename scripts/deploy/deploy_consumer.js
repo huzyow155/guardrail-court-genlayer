@@ -17,7 +17,7 @@ async function main() {
   const guardrailCourtAddress = deployments.contractAddress;
   console.log("Target GuardrailCourt address:", guardrailCourtAddress);
 
-  const codePath = path.join(__dirname, '../../examples/consumer/GuardedVault.py');
+  const codePath = path.join(__dirname, '../../archive/v1/GuardedVault.py');
   const code = fs.readFileSync(codePath, 'utf8');
 
   console.log("Deploying GuardedVault consumer contract to Studionet...");
