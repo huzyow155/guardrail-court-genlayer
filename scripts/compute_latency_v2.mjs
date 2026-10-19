@@ -75,7 +75,7 @@ const allSamples = [
   { label: "Case 8 Pending Escalation 10/10", txHash: "0x7289222372a79b933aa9f3b19dc39352539725062c782661e557efdbe0c47ada", durSec: 5.37, class: "reverted_validation", source: "revert:too many pending" },
   { label: "Case 8 11th Action Cap Exceeded Check", txHash: "0x9751c07ba6ca6d67926821096093f1090debc9beea6aec94abb6dcc38ba1af93", durSec: 8.49, class: "reverted_validation", source: "revert:too many pending" },
   { label: "Case 9 GuardedVault Replay Revert Check", txHash: "0xe6ef8621642d51299381ecbc34f9c5505b093e9bc28c0a25f594bf8e94b9c23e", durSec: 5.17, class: "reverted_validation", source: "revert:already executed" },
-  { label: "Case 9 GuardedVault Parameter Tamper Check", txHash: "0x75672bf05a8eddbcdc29b57d160d6a4b0a2ba8487582cef2eaa38e0bc553d386", durSec: 8.54, class: "reverted_validation", source: "revert:clearance mismatch" },
+  { label: "Case 9 GuardedVault parameter mismatch check", txHash: "0x75672bf05a8eddbcdc29b57d160d6a4b0a2ba8487582cef2eaa38e0bc553d386", durSec: 8.54, class: "reverted_validation", source: "revert:clearance mismatch" },
   { label: "Case 9 GuardedVault Execution on Paused Policy", txHash: "0xfdd8b9bc0b3f3d2532303e7e7efbb741f54435296e37841002258a592df86f9b", durSec: 8.61, class: "reverted_validation", source: "revert:clearance mismatch" },
   { label: "Validation 10.1 Newline in justification", txHash: "0x966193eb70e1cbbae121de5035928b1851f24da7ac91b29b0f94084eea5dbaa7", durSec: 5.47, class: "reverted_validation", source: "revert:control char in just." },
   { label: "Validation 10.2 Justification < 5 chars", txHash: "0x44f74cffb65094c12389abcc94be6a4e62ab96e76f43049bb7ad01cad82134bb", durSec: 5.21, class: "reverted_validation", source: "revert:justification < 5" },

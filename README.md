@@ -1,6 +1,6 @@
 # Submitted contract: Guardrail Court V2
 
-> Natural-language policy gate and multi-validator parameter-bound clearance protocol for autonomous AI agents on GenLayer Studionet.
+> Natural-language policy gate and multi-validator parameter-bound clearance protocol for AI agents on GenLayer Studionet.
 
 ## Active Contract Summary
 
@@ -29,7 +29,7 @@ The table below maps each reviewer feedback requirement to its exact implementat
 
 > [!NOTE]
 > **Offline-Tested vs On-Chain Tested Boundary**:
-> The strict parser fail-closed behavior for malformed JSON, multi-verdict strings, prose quoting ALLOW, and Cyrillic homoglyphs is **offline-tested via comprehensive Python unit tests and property fuzzer** (`tests/test_reviewer_regressions.py`). The foundation model cannot be forced to deterministically emit malformed JSON on the live Studionet network. Live on-chain evidence demonstrates clean JSON execution, prompt injection rejection, parameter mismatch denials, deterministic guard short-circuits, and vault single-use enforcement.
+> The strict parser fail-closed behavior for malformed JSON, multi-verdict strings, prose quoting ALLOW, and Cyrillic homoglyphs is **offline-tested via comprehensive Python unit tests and property fuzzer** (`tests/test_reviewer_regressions.py`). The foundation model cannot be forced to deterministically emit malformed JSON on the on-chain Studionet network. Studionet on-chain evidence demonstrates clean JSON execution, prompt injection rejection, parameter mismatch denials, deterministic guard short-circuits, and vault single-use enforcement.
 
 ---
 
@@ -99,7 +99,7 @@ As detailed in [`docs/LIMITATIONS.md`](docs/LIMITATIONS.md):
 
 ## On-Chain Verified Evidence Summary (Studionet)
 
-Live transactions executed and verified on GenLayer Studionet (see [`docs/VERIFICATION.md`](docs/VERIFICATION.md)):
+On-chain transactions executed and verified on GenLayer Studionet (see [`docs/VERIFICATION.md`](docs/VERIFICATION.md)):
 
 | Case | Scenario | Transaction Hash | Consensus | Verdict | Source | Latency |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
@@ -107,7 +107,7 @@ Live transactions executed and verified on GenLayer Studionet (see [`docs/VERIFI
 | **Case 2** | Amount exceeding max_amount (101 USDC) | `0x7b92bf05ea02125b59579e5f1cd72620a43fdc17da5af6eec1ff057e1929202a` | `MAJORITY_AGREE` | `DENY` | `HARD_LIMIT` | 9.03s |
 | **Case 3a** | Unauthorized recipient address | `0x240ca57c087568fc9cc8c693911c8f41018b92ea0bd1e9e0b5198fee4a2f4118` | `MAJORITY_AGREE` | `DENY` | `RECIPIENT_GUARD` | 9.56s |
 | **Case 3b** | Unauthorized asset (`DAI`) | `0x76213a0c685051858c93651481c2610e8ee974014275ace16c6ea323d21de613` | `MAJORITY_AGREE` | `DENY` | `ASSET_GUARD` | 9.09s |
-| **Case 4b** | Live velocity guard trip (60 + 60 > 100) | `0xfcc8e570cce2abdeb0583f0fdd9a569f1169dbab0af3e106b749559fb8fc9d80` | `MAJORITY_AGREE` | `ESCALATE` | `VELOCITY` | 8.75s |
+| **Case 4b** | On-chain velocity guard trip (60 + 60 > 100) | `0xfcc8e570cce2abdeb0583f0fdd9a569f1169dbab0af3e106b749559fb8fc9d80` | `MAJORITY_AGREE` | `ESCALATE` | `VELOCITY` | 8.75s |
 | **Case 5b** | Prompt injection resistance (delimiter spoof) | `0x2754665b53f5ff8429fdc6c2a931aee3b1c88feba887917fb99f310bf92ca782` | `MAJORITY_AGREE` | `DENY` | `JUDGE` | 24.24s |
 | **Case 7** | Owner emergency pause toggle | `0xd25e8165be376b53a01209eea0a7162e9e82aa6275fca5d507abc9f57d1ae0ae` | `MAJORITY_AGREE` | N/A | Owner | 9.03s |
 | **Case 8** | Pending escalation queue cap (10 items) | `0x7289222372a79b933aa9f3b19dc39352539725062c782661e557efdbe0c47ada` | `MAJORITY_AGREE` | Revert | Gate | 5.37s |

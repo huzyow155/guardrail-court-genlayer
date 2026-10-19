@@ -1,5 +1,5 @@
 // Example: AI Agent Clearance Verification
-// Shows how an autonomous agent or executor submits a request to GuardrailCourt,
+// Shows how an unattended agent or executor submits a request to GuardrailCourt,
 // validates the 3-condition consensus receipt, retrieves the decision record via
 // list_decisions (avoiding racy blind reliance on latest_decision_id), and checks is_cleared.
 

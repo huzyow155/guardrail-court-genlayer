@@ -2,7 +2,7 @@
 
 This document describes the active limits, security boundaries, and operational assumptions of **Guardrail Court V2** (`contracts/GuardrailCourtV2.py`, deployed on Studionet at `0xF5797dDB4ce419ec50351BF9B48D5C24D5330d7b`).
 
-For historical limitations of the superseded V1 contract (`contracts/GuardrailCourt.py`, `0x6C553Ba27a768D71b570a106D9D2e13553b4103c`), see [`archive/v1/LIMITATIONS_V1.md`](../archive/v1/LIMITATIONS_V1.md).
+For historical limitations of the superseded V1 contract (`archive/v1/GuardrailCourt.py`, `0x6C553Ba27a768D71b570a106D9D2e13553b4103c`), see [`archive/v1/LIMITATIONS_V1.md`](../archive/v1/LIMITATIONS_V1.md).
 
 ---
 
@@ -28,8 +28,8 @@ For historical limitations of the superseded V1 contract (`contracts/GuardrailCo
 ---
 
 ## 4. Conservative Model Escalation on Generic Justifications
-- **Empirical Observation**: Live testing on GenLayer Studionet demonstrates that validator consensus adopts a conservative stance towards sparse, repetitive, or generic agent justifications.
-- **Operational Reality**: For example, in live test runs, generic justification strings such as "server capacity scaling" resulted in validator escalation (`PENDING_OWNER`) rather than autonomous clearance. Autonomous agents should provide concrete, verifiable context (e.g. invoice IDs, specific service endpoints, or explicit scope references) to allow the validator model to verify policy compliance.
+- **Empirical Observation**: On-chain testing on GenLayer Studionet demonstrates that validator consensus adopts a conservative stance towards sparse, repetitive, or generic agent justifications.
+- **Operational Reality**: For example, in on-chain test runs, generic justification strings such as "server capacity scaling" resulted in validator escalation (`PENDING_OWNER`) rather than automatic clearance. AI agents should provide concrete, verifiable context (e.g. invoice IDs, specific service endpoints, or explicit scope references) to allow the validator model to verify policy compliance.
 
 ---
 

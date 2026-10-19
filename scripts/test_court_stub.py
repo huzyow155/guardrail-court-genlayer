@@ -57,4 +57,4 @@ try:
 except gl.vm.UserError as e:
     print('Caught expected UserError while paused:', e)
 
-print('\nALL STUB CONTRACT METHODS EXECUTED DIRECTLY ON contracts/GuardrailCourt.py!')
+print('\nALL STUB CONTRACT METHODS EXECUTED DIRECTLY ON archive/v1/GuardrailCourt.py!')

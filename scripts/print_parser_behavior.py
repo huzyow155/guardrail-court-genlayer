@@ -1,7 +1,7 @@
 import sys
 import types
 
-# Minimal stub to import contracts/GuardrailCourt.py directly
+# Minimal stub to import archive/v1/GuardrailCourt.py directly
 genlayer_mod = types.ModuleType("genlayer")
 class MockGL:
     Contract = type("Contract", (), {})
